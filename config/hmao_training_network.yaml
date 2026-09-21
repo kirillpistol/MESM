@@ -1,0 +1,49 @@
+version: 2
+
+region: Ханты-Мансийский автономный округ — Югра
+purpose: OKTMO_TRAINING_NETWORK
+target_oktmo: "71876000"
+
+identity_policy:
+  cross_source_joins_require_oktmo: true
+  model_training_key: oktmo
+  source_name_used_only_for_sberindex_row_resolution: true
+  collision_policy: FAIL_CLOSED
+  verification_note: "Коды сверены по опубликованной таблице соответствия ОКАТО↔ОКТМО; финальная row-level сверка с текущим CSV Росстата 2026 остаётся обязательным gate."
+
+peer_oktmo_map:
+  Белоярский муниципальный район: "71811000"
+  городской округ город Когалым: "71883000"
+  Кондинский муниципальный район: "71816000"
+  городской округ город Лангепас: "71872000"
+  городской округ город Мегион: "71873000"
+  городской округ город Нефтеюганск: "71874000"
+  Нефтеюганский муниципальный район: "71818000"
+  городской округ город Нижневартовск: "71875000"
+  Нижневартовский муниципальный район: "71819000"
+  городской округ город Нягань: "71879000"
+  городской округ город Покачи: "71884000"
+  городской округ город Пыть-Ях: "71885000"
+  городской округ город Радужный: "71877000"
+  городской округ город Сургут: "71876000"
+  Сургутский муниципальный район: "71826000"
+  городской округ город Урай: "71878000"
+  городской округ город Ханты-Мансийск: "71871000"
+  Ханты-Мансийский муниципальный район: "71829000"
+  городской округ город Югорск: "71887000"
+
+excluded_source_collisions:
+  Березовский муниципальный район:
+    oktmo: "71812000"
+    reason: SAME_SOURCE_NAME_OCCURS_FOR_MULTIPLE_REGIONS
+  Октябрьский муниципальный район:
+    oktmo: "71821000"
+    reason: SAME_SOURCE_NAME_OCCURS_FOR_MULTIPLE_REGIONS
+  Советский муниципальный район:
+    oktmo: "71824000"
+    reason: SAME_SOURCE_NAME_OCCURS_FOR_MULTIPLE_REGIONS
+
+reference:
+  current_rosstat_registry_page: https://rosstat.gov.ru/opendata/7708234640-oktmo
+  current_rosstat_metadata_date: "2026-09-01"
+  crosswalk_reference: https://www.kontur-extern.ru/info/normativ/document/41/57957767-tablitsa-sootvetstviya-kodov-okato-kodam-oktmo-munitsipalnykh-obrazovaniy-i-vkhodyashchikh

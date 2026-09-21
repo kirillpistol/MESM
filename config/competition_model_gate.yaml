@@ -1,0 +1,19 @@
+version: 1
+
+final_champion_gate:
+  same_holdout_required: true
+  primary_metric: MAE
+  target_oktmo: "71876000"
+  holdout_year: 2024
+  minimum_oos_observations: 12
+  require_peer_oktmo_resolution: true
+  require_current_rosstat_row_level_verification: true
+  require_ci_reproducibility: true
+  require_source_sha256: true
+  require_no_future_leakage: true
+  require_model_config_saved: true
+
+current_state:
+  development_leader: GROW
+  final_champion_locked: false
+  reason: 19 training peers now use OKTMO, but current 2026 Rosstat row-level verification remains pending

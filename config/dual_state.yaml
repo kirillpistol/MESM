@@ -1,0 +1,33 @@
+version: 1.0
+status: development_default
+note: >-
+  Development defaults only. Calibrate on the development period and freeze
+  before the final temporal holdout. Do not treat these values as production thresholds.
+
+contour_state_machine:
+  states: [NORMAL, OBSERVE, WARNING, BREAK_CONFIRMED]
+  on_threshold: 2.0
+  off_threshold: 1.0
+  k_on: 2
+  k_off: 2
+  break_persistence: 3
+  min_confirmations: 2
+
+confirmation_rule:
+  principle: persistent_signal_plus_independent_confirmation
+  eligible_detectors: [CUSUM, PELT, BEAST, PAGE_HINKLEY, EXTERNAL_EVENT]
+  detector_disagreement_state: OBSERVE
+
+dual_state:
+  NORMAL:
+    reference_active: false
+    predictive_active: false
+  EARLY_WARNING:
+    reference_active: false
+    predictive_active: true
+  FISCAL_DIVERGENCE:
+    reference_active: true
+    predictive_active: false
+  SYSTEMIC_STRESS:
+    reference_active: true
+    predictive_active: true

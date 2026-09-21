@@ -1,0 +1,33 @@
+{
+  "source_id": "sberindex_cashless_spending_municipal",
+  "authority": "СберИндекс",
+  "classification": "PUBLIC",
+  "dashboard_url": "https://sberindex.ru/ru/dashboards/potrebitelskie-beznalicnye-rashody-na-urovne-munizipalnyh-obrazovanij",
+  "natural_frequency": "MONTH",
+  "geography_level": "MUNICIPALITY",
+  "required_categories": [
+    "Все категории",
+    "Продовольствие",
+    "Здоровье",
+    "Общественное питание",
+    "Маркетплейсы",
+    "Транспорт"
+  ],
+  "raw_columns": [
+    "period",
+    "value",
+    "obs_status",
+    "source",
+    "category_15",
+    "mo",
+    "freq",
+    "decimals",
+    "unit_measure",
+    "unit_mult"
+  ],
+  "identity_policy": {
+    "preferred_id": "OKTMO",
+    "current_export_contains_region": false,
+    "ambiguous_name_action": "QUARANTINE_UNTIL_RESOLVED"
+  }
+}

@@ -1,0 +1,39 @@
+name: shock-models
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "src/mesm/evaluation/shock_benchmark.py"
+      - "src/mesm/models/changepoint.py"
+      - "scripts/run_shock_tournament.py"
+      - "config/competition_shock.yaml"
+      - "data/reports/competition/surgut_2024_catboost_predictions.csv"
+      - ".github/workflows/shock.yml"
+
+jobs:
+  shock-benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Получить код
+        uses: actions/checkout@v4
+      - name: Установить Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Установить зависимости
+        run: pip install -e ".[dev,yaml,research,changepoint]"
+      - name: Проверить shock tests
+        run: python -m pytest tests/test_shock_benchmark.py -q
+      - name: Запустить shock tournament
+        run: python scripts/run_shock_tournament.py
+      - name: Сохранить shock benchmark
+        uses: actions/upload-artifact@v4
+        with:
+          name: MESM_Shock_Benchmark
+          path: |
+            data/reports/competition/shock_benchmark_dev.csv
+            data/reports/competition/shock_calibration_dev.csv
+          if-no-files-found: error
+          retention-days: 30

@@ -1,0 +1,30 @@
+version: 1
+
+primary_geographic_key: oktmo
+municipality_oktmo_digits: 8
+allow_name_as_primary_key: false
+allow_unresolved_identity_in_model: false
+
+registry:
+  path: data/reference/municipality_registry.csv
+  authority: Росстат
+  dataset_id: 7708234640-oktmo
+  page_url: https://rosstat.gov.ru/opendata/7708234640-oktmo
+  update_policy: preserve_source_version_and_sha256
+
+source_aliases:
+  sberindex:
+    path: data/reference/sberindex_municipality_aliases.csv
+    source_id: sberindex_cashless_spending_municipal
+    auto_approve_methods:
+      - EXACT_UNIQUE_NAME
+    fuzzy_match_policy: REVIEW_ONLY
+
+model_key:
+  columns: [oktmo, period_start, category_code]
+
+hierarchy:
+  keep_region_code: true
+  keep_parent_oktmo: true
+  support_historical_codes: true
+  recode_annulled_codes_from_official_crosswalk: true

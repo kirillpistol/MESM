@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Budget Classification Mapping",
+  "type": "object",
+  "required": ["mapping_version", "relationship", "source_code", "canonical_id"],
+  "properties": {
+    "mapping_version": {"type": "string"},
+    "relationship": {"enum": ["one_to_one", "one_to_many", "many_to_one", "renamed_same_code", "newly_introduced", "retired", "excluded"]},
+    "source_code": {"type": "string"},
+    "target_code": {"type": ["string", "null"]},
+    "canonical_id": {"type": "string"},
+    "valid_from": {"type": ["string", "null"], "format": "date"},
+    "valid_to": {"type": ["string", "null"], "format": "date"}
+  }
+}

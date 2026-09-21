@@ -1,0 +1,16 @@
+champion_challenger:
+  auto_promote: false
+  require_reproducibility: true
+  require_schema_validation: true
+  require_leakage_check: true
+  require_stress_tests: true
+  rollback_required: true
+
+uncertainty:
+  min_probability_margin: 0.10
+  action_when_below_margin: UNCERTAIN
+
+detectors:
+  online_primary: CUSUM
+  offline_primary: PELT
+  disagreement_action: OBSERVE

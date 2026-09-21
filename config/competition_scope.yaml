@@ -1,0 +1,36 @@
+version: 1
+
+target:
+  municipality_name: Сургут
+  oktmo: "71876000"
+  role: PRIMARY_CASE
+
+network:
+  geography: Ханты-Мансийский автономный округ — Югра
+  oktmo_prefix: "71"
+  role: TRAINING_AND_PEER_CONTEXT
+  national_expansion: false
+
+time:
+  source_actuals:
+    start: 2023-01
+    end: 2024-12
+  evaluation:
+    primary_holdout_year: 2024
+    rolling_origin: true
+  future:
+    periods_after_2024: FORECAST_ONLY_UNTIL_ACTUALS_AVAILABLE
+
+data_policy:
+  keep_full_raw_export: true
+  model_ready_scope: HMAO_ONLY
+  dashboard_default_scope: SURGUT
+  external_features_scope:
+    municipal: SURGUT
+    regional: HMAO
+    macro: RUSSIA_WHEN_RELEVANT
+  require_feature_justification: true
+
+metrics:
+  primary: MAE
+  secondary: [R2, WAPE, MASE, RMSE]

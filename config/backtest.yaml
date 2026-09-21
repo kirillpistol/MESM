@@ -1,0 +1,21 @@
+version: 1.0
+frequency: MONTH
+training_window: expanding
+minimum_training_periods: 24
+forecast_horizon_periods: 1
+step_periods: 1
+final_holdout_periods: 12
+final_holdout_locked: true
+as_of_semantics: true
+random_split_forbidden: true
+
+insufficient_history_policy:
+  confirmatory_test: exclude
+  exploratory_analysis: allow_with_flag
+
+aggregation:
+  primary: macro_average
+  secondary:
+    - population_weighted
+    - business_weighted
+  note: business weighting is reserved for bank-specific use cases.

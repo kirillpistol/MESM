@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Article 136 Status",
+  "type": "object",
+  "required": ["municipality_id", "classification_year", "source_id"],
+  "properties": {
+    "municipality_id": {"type": "string"},
+    "classification_year": {"type": "integer"},
+    "group": {"type": ["integer", "string", "null"]},
+    "high_subsidy_flag": {"type": ["boolean", "null"]},
+    "source_id": {"type": "string"},
+    "dotation_share": {"type": ["number", "null"]}
+  }
+}

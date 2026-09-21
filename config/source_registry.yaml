@@ -1,0 +1,101 @@
+sources:
+  surgut_official_budget_web:
+    authority: "Администрация города Сургута / Дума города Сургута"
+    classification: PUBLIC
+    natural_frequency: EVENT
+    versions_preserved: true
+    transport: HTTPS_DISCOVERY
+    status: ACTIVE
+
+  budget_execution:
+    authority: "Департамент финансов ХМАО-Югры"
+    classification: PUBLIC
+    natural_frequency: EVENT
+    versions_preserved: true
+
+  municipal_execution_snapshots:
+    authority: "Департамент финансов ХМАО-Югры"
+    classification: PUBLIC
+    natural_frequency: HALF_YEAR
+    versions_preserved: true
+
+  prospective_financial_plan:
+    authority: "Департамент финансов ХМАО-Югры"
+    classification: PUBLIC
+    natural_frequency: EVENT
+    versions_preserved: true
+
+  expenditure_obligations:
+    authority: "Департамент финансов ХМАО-Югры"
+    classification: PUBLIC
+    natural_frequency: YEAR
+
+  budget_classification:
+    authority: "Департамент финансов ХМАО-Югры"
+    classification: PUBLIC
+    natural_frequency: EVENT
+
+  article136:
+    authority: "Департамент финансов ХМАО-Югры"
+    classification: PUBLIC
+    natural_frequency: YEAR
+
+  official_budget_quality:
+    authority: "Департамент финансов ХМАО-Югры"
+    classification: PUBLIC
+    natural_frequency: YEAR
+
+  rosstat_oktmo:
+    authority: "Росстат"
+    classification: PUBLIC
+    natural_frequency: EVENT
+    geography_level: MUNICIPALITY
+    transport: OPEN_DATA_CSV
+    dataset_id: "7708234640-oktmo"
+    page_url: "https://rosstat.gov.ru/opendata/7708234640-oktmo"
+    status: ACTIVE
+
+  sberindex_cashless_spending:
+    authority: "СберИндекс"
+    classification: PUBLIC
+    natural_frequency: MONTH
+    geography_level: MUNICIPALITY
+    status: ACTIVE
+    required_for_competition: true
+
+  sberindex_mobility:
+    authority: "СберИндекс"
+    classification: PUBLIC
+    natural_frequency: MONTH
+    geography_level: MUNICIPALITY
+    status: PLANNED
+
+  bank_consumption:
+    authority: "institution-specific"
+    classification: BANK_CONFIDENTIAL
+    natural_frequency: WEEK_OR_MONTH
+    public_repository_allowed: false
+
+  external_fx:
+    authority: "Банк России"
+    classification: PUBLIC
+    natural_frequency: DAY_OR_MONTH
+    status: PLANNED
+
+  external_cpi_income_employment:
+    authority: "Росстат / ЕМИСС"
+    classification: PUBLIC
+    natural_frequency: MONTH
+    status: PLANNED
+
+  external_fuel:
+    authority: "Росстат"
+    classification: PUBLIC
+    natural_frequency: WEEK_OR_MONTH
+    status: PLANNED
+
+  external_oil:
+    authority: "public_market_source"
+    classification: PUBLIC
+    natural_frequency: DAY_OR_MONTH
+    status: PLANNED

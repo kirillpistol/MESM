@@ -1,0 +1,4 @@
+detector,parameter,null_path_fpr,target_met
+CUSUM,20.0,0.083333,True
+PAGE_HINKLEY,20.0,0.033333,True
+PELT,2.0,0.080000,True

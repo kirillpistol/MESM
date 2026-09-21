@@ -1,0 +1,2 @@
+oktmo,oktmo_full,municipality_name,municipality_type,region_name,region_code,parent_oktmo,valid_from,valid_to,source_id,source_url,source_version,status
+71876000,71876000000,Сургут,городской округ,Ханты-Мансийский автономный округ — Югра,71,,,,rosstat_oktmo,https://rosstat.gov.ru/opendata/7708234640-oktmo,2026-09-01,ACTIVE

@@ -1,0 +1,34 @@
+version: 1.0
+
+revision_rate:
+  expression: "(revised - initial) / initial"
+  zero_denominator: null
+
+revision_magnitude:
+  expression: "abs(revised - initial) / abs(initial)"
+  zero_denominator: null
+
+execution_rate:
+  expression: "actual / revised"
+  zero_denominator: null
+
+execution_gap:
+  expression: "(actual - revised) / revised"
+  zero_denominator: null
+
+coverage_gap:
+  expression: "planned_resources / estimated_obligation_cost - 1"
+  zero_denominator: null
+
+forecast_residual:
+  expression: "actual - forecast"
+
+standardized_residual:
+  expression: "residual / residual_sigma"
+  zero_denominator: null
+
+lead_time_days:
+  expression: "reference_signal_date - predictive_signal_date"
+
+probability_margin:
+  expression: "top_probability - second_probability"

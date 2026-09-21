@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MESM Budget Normalization Input",
+  "type": "object",
+  "required": [
+    "municipality_name",
+    "year",
+    "revenue_base",
+    "transfers",
+    "expenditure",
+    "deficit_limit_ratio"
+  ],
+  "properties": {
+    "municipality_name": {"type": "string", "minLength": 1},
+    "year": {"type": "integer", "minimum": 2000},
+    "revenue_base": {"type": "number", "minimum": 0},
+    "transfers": {"type": "number", "minimum": 0},
+    "expenditure": {"type": "number", "minimum": 0},
+    "eligible_exceptions": {"type": "number", "minimum": 0},
+    "recurring_revenue": {"type": "number", "minimum": 0},
+    "recurring_expenditure": {"type": "number", "minimum": 0},
+    "current_debt": {"type": "number", "minimum": 0},
+    "planned_net_borrowing": {"type": "number"},
+    "debt_service": {"type": "number", "minimum": 0},
+    "expenditure_ex_subventions": {"type": "number", "minimum": 0},
+    "financing_sources": {"type": "number", "minimum": 0},
+    "deficit_limit_ratio": {"type": "number", "minimum": 0, "maximum": 1},
+    "debt_limit_ratio": {"type": "number", "minimum": 0, "maximum": 2},
+    "debt_service_limit_ratio": {"type": "number", "minimum": 0, "maximum": 1}
+  },
+  "additionalProperties": false
+}

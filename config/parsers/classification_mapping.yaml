@@ -1,0 +1,13 @@
+parser_id: classification_mapping
+version: 1.0
+match:
+  filename_contains: ["Сопоставительная таблица", "Приложение к Порядку"]
+outputs:
+  - classification_mapping
+required_semantics:
+  - "Код целевой статьи"
+  - "Код доходов"
+rules:
+  allow_many_to_one: true
+  allow_one_to_many: true
+  fuzzy_match_auto_approve: false

@@ -1,0 +1,20 @@
+mapping_policy:
+  versioned: true
+  official_mapping_preferred: true
+  ambiguous_mapping_requires_review: true
+  apply_before_changepoint: true
+
+relationship_types:
+  - one_to_one
+  - one_to_many
+  - many_to_one
+  - renamed_same_code
+  - newly_introduced
+  - retired
+  - excluded
+
+sources:
+  - "Сопоставительная таблица ЦСР (2024 к 2023).xlsx"
+  - "Сопоставительная таблица ЦСР КБК доходы 24-26 (для МО).xlsx"
+  - "ПРОЕКТ Приложение к Порядку (на 2025-2027) на 28.11.24.xlsx"
+  - "Приложение к Порядку (проект 2026-2028).xlsx"

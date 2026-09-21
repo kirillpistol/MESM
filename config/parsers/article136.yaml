@@ -1,0 +1,13 @@
+parser_id: article136
+version: 1.0
+match:
+  filename_contains: ["ст.136", "ст 136"]
+outputs:
+  - article136_status
+required_semantics:
+  - "Всего доходов"
+  - "Объем дотаций"
+  - "Доля дотаций"
+rules:
+  preserve_source_group: true
+  derive_boolean_high_subsidy_only_from_documented_group_rule: false

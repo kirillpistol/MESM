@@ -1,0 +1,58 @@
+version: 1.1
+
+forecast_metrics: [MAE, R2, WAPE, MASE, RMSE]
+forecast_primary_metric: MAE
+
+shock_metrics:
+  primary: PR_AUC
+  secondary: [ROC_AUC, precision, recall, false_alarms_per_entity_year]
+
+dual_model_value:
+  score_formula: "1 - (1 - reference_score) * (1 - predictive_score)"
+  categorical_formula: "F = 2 * reference_active + predictive_active"
+  metrics: [delta_PR_AUC, delta_ROC_AUC, delta_Utility]
+
+operational_metric:
+  name: LeadTime_at_FalseAlarmBudget
+  false_alarm_budget_unit: entity_year
+  target_budget: 0.10
+  status: freeze_after_development_calibration
+
+hypothesis_acceptance:
+  H1_forecasting:
+    mase_max_exclusive: 1.0
+    relative_loss_improvement_min: 0.05
+    alpha: 0.05
+    dm_min_paired_forecasts: 30
+    fallback: block_bootstrap
+  H2_early_detection:
+    median_lead_time_periods_min_exclusive: 0
+    bootstrap_ci_lower_min_exclusive: 0
+    false_alarms_per_entity_year_max: 0.10
+    primary_test: bootstrap_ci_for_matched_event_leadtime
+    secondary: [PR_AUC_with_CI, ROC_AUC_with_CI]
+  H3_dual_contour:
+    delta_pr_auc_min_exclusive: 0
+    delta_utility_min_exclusive: 0
+    bootstrap_ci_lower_min_exclusive: 0
+    delong_alpha: 0.05
+    delong_min_positive_events: 20
+    delong_min_negative_events: 20
+  H4_economic_utility:
+    net_economic_effect_min_exclusive: 0
+    bootstrap_ci_lower_min_exclusive: 0
+    bootstrap_runs: 2000
+  H5_adaptation:
+    adaptive_loss_improvement_min_exclusive: 0
+    bootstrap_ci_lower_min_exclusive: 0
+
+power_simulation:
+  target_path_fpr: 0.10
+  target_power: 0.80
+  status: synthetic_development_benchmark
+
+economic_effect:
+  first_stage: historical_replay
+  second_stage: shadow_period
+  shadow_period_months: 3
+  later_stage: controlled_pilot

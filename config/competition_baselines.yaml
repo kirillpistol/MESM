@@ -1,0 +1,32 @@
+version: 1
+
+target:
+  oktmo: "71876000"
+  municipality_name: Сургут
+  category_code: ALL
+
+evaluation:
+  holdout_year: 2024
+  min_train_periods: 12
+  forecast_horizon: 1
+  protocol: expanding_one_step
+  random_split_forbidden: true
+  actuals_required: true
+
+baseline_models:
+  - LAST_VALUE
+  - SEASONAL_NAIVE_12
+  - LINEAR_TREND
+
+metrics:
+  primary: MAE
+  secondary: [R2, WAPE, RMSE, MASE]
+
+selection:
+  champion_baseline: lowest_MAE
+  tie_breakers: [RMSE, R2]
+
+next_challengers:
+  - PROPHET
+  - GROW
+  - LIGHTGBM_GLOBAL

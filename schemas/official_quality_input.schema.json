@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Official Budget Quality Input",
+  "type": "object",
+  "required": ["year", "municipality_name", "source_metric", "source_id"],
+  "properties": {
+    "year": {"type": "integer"},
+    "municipality_name": {"type": "string"},
+    "indicator_id": {"type": ["string", "null"]},
+    "source_metric": {"type": "string"},
+    "raw_value": {},
+    "threshold_min": {},
+    "threshold_max": {},
+    "source_id": {"type": "string"}
+  }
+}

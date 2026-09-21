@@ -1,0 +1,17 @@
+parser_id: budget_execution_archive
+version: 1.0
+match:
+  filename_contains: ["исполн", "бюджет"]
+outputs:
+  - budget_execution
+  - interbudget_transfer
+  - revision_reason
+strategy:
+  archive_safe_extract: true
+  semantic_member_detection: true
+  member_patterns:
+    revenue: ["Исполнение доходов", "доходов в разрезе"]
+    expenditure: ["Исполнение расходов", "по разделам"]
+    transfers: ["межбюджетных трансфертов", "форм МБТ"]
+    transfer_reasons: ["Причины низкого исполнения", "поясн"]
+on_unknown_schema: quarantine

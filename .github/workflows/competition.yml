@@ -1,0 +1,29 @@
+name: competition-models
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "src/mesm/models/**"
+      - "scripts/run_surgut_prophet_fixture.py"
+      - "data/processed/competition/**"
+      - "pyproject.toml"
+      - ".github/workflows/competition.yml"
+
+jobs:
+  prophet-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Получить код
+        uses: actions/checkout@v4
+      - name: Установить Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Установить competition dependencies
+        run: pip install -e ".[dev,competition]"
+      - name: Проверить optional model tests
+        run: python -m pytest tests/test_competition_challengers_optional.py -q
+      - name: Запустить Prophet на фактическом Сургуте
+        run: python scripts/run_surgut_prophet_fixture.py

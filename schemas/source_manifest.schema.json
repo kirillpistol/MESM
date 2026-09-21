@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MESM Source Manifest Row",
+  "type": "object",
+  "required": [
+    "source_id",
+    "page_url",
+    "source_url",
+    "file_name",
+    "sha256",
+    "data_class",
+    "raw_immutable"
+  ],
+  "properties": {
+    "source_id": {"type": "string"},
+    "authority": {"type": ["string", "null"]},
+    "document_type": {"type": ["string", "null"]},
+    "municipality_name": {"type": ["string", "null"]},
+    "page_url": {"type": "string", "format": "uri"},
+    "source_url": {"type": "string", "format": "uri"},
+    "title": {"type": ["string", "null"]},
+    "publication_date": {"type": ["string", "null"]},
+    "downloaded_at_utc": {"type": ["string", "null"]},
+    "file_name": {"type": "string"},
+    "file_ext": {"type": ["string", "null"]},
+    "size_bytes": {"type": ["integer", "number", "string", "null"]},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "data_class": {
+      "enum": ["PUBLIC", "INTERNAL", "RESTRICTED", "BANK_CONFIDENTIAL", "HIGHLY_RESTRICTED"]
+    },
+    "raw_immutable": {"type": ["boolean", "string"]},
+    "ingestion_status": {"type": ["string", "null"]}
+  },
+  "additionalProperties": false
+}

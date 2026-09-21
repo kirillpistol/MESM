@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mesm.local/schemas/fiscal_reference_panel.schema.json",
+  "title": "MESM Fiscal Reference Panel",
+  "type": "object",
+  "required": ["year", "municipality_name", "period_end", "frequency", "data_status"],
+  "properties": {
+    "year": {"type": "integer", "minimum": 2000},
+    "municipality_name": {"type": "string"},
+    "municipality_oktmo": {"type": ["string", "null"]},
+    "period_end": {"type": "string", "format": "date"},
+    "frequency": {"type": "string", "enum": ["YEAR", "HALF_YEAR", "QUARTER", "EVENT"]},
+    "income_plan_deviation": {"type": ["number", "null"]},
+    "program_expense_share": {"type": ["number", "null"]},
+    "budget_amendments": {"type": ["number", "null"]},
+    "debt_load": {"type": ["number", "null"]},
+    "quality_rank": {"type": ["number", "null"]},
+    "article136_high_subsidy_flag": {"type": ["number", "null"]},
+    "source_file": {"type": ["string", "null"]},
+    "publication_date": {"type": ["string", "null"], "format": "date"},
+    "data_status": {"type": "string", "enum": ["official_public", "derived_from_official_public", "synthetic"]}
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,26 @@
+default_effect: deny
+
+roles:
+  DATA_ENGINEER:
+    datasets: [PUBLIC, INTERNAL]
+    actions: [read, transform]
+  MODEL_ANALYST:
+    datasets: [PUBLIC, INTERNAL]
+    actions: [read, model]
+  BUSINESS_USER:
+    datasets: [PUBLIC, INTERNAL]
+    actions: [read_aggregates]
+  AUDITOR:
+    datasets: [PUBLIC, INTERNAL, RESTRICTED, BANK_CONFIDENTIAL]
+    actions: [read_audit]
+  SECURITY_ADMIN:
+    datasets: []
+    actions: [manage_policy]
+
+rules:
+  raw_bank_transactions:
+    allowed_roles: []
+  client_identifiers:
+    allowed_roles: []
+  public_fiscal:
+    allowed_roles: [DATA_ENGINEER, MODEL_ANALYST, BUSINESS_USER, AUDITOR]

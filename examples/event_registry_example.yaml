@@ -1,0 +1,15 @@
+# Только синтетический пример. Его нельзя использовать как доказательство на реальных данных.
+event_id: DEMO_SURGUT_001
+municipality_id: "71876000"
+start_date: "2024-04-01"
+end_date: "2024-05-31"
+event_type: demand
+severity: 1.0
+label_type: external_event
+label_source: synthetic_demo
+label_confidence: 1.0
+evaluation_eligible: false
+circularity_note: synthetic example; excluded from confirmatory evaluation
+publication_date: null
+source_ref: null
+data_status: synthetic

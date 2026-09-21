@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Budget Execution",
+  "type": "object",
+  "required": ["municipality_id", "period_end", "metric", "unit", "source_id"],
+  "properties": {
+    "municipality_id": {"type": "string"},
+    "oktmo": {"type": ["string", "null"]},
+    "period_start": {"type": ["string", "null"], "format": "date"},
+    "period_end": {"type": "string", "format": "date"},
+    "as_of_date": {"type": ["string", "null"], "format": "date"},
+    "frequency": {"enum": ["MONTH", "QUARTER", "HALF_YEAR", "YEAR", "EVENT"]},
+    "metric": {"type": "string"},
+    "budget_code": {"type": ["string", "null"]},
+    "canonical_budget_code": {"type": ["string", "null"]},
+    "plan_initial": {"type": ["number", "null"]},
+    "plan_approved": {"type": ["number", "null"]},
+    "plan_revised": {"type": ["number", "null"]},
+    "actual": {"type": ["number", "null"]},
+    "unit": {"type": "string"},
+    "source_id": {"type": "string"}
+  }
+}

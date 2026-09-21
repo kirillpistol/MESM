@@ -1,0 +1,15 @@
+year,municipality_name,budget_side,group,item_name,amount,item_code,is_transfer,is_recurring,is_subvention,is_debt_service,is_borrowing,flexibility,source_file,notes
+2027,Сургут,REVENUE,Налоговые доходы,НДФЛ,42000000,,0,1,0,0,0,UNKNOWN,SYNTHETIC_DEMO,synthetic
+2027,Сургут,REVENUE,Налоговые доходы,Налог на прибыль,12000000,,0,1,0,0,0,UNKNOWN,SYNTHETIC_DEMO,synthetic
+2027,Сургут,REVENUE,Неналоговые доходы,Имущество,6000000,,0,1,0,0,0,UNKNOWN,SYNTHETIC_DEMO,synthetic
+2027,Сургут,REVENUE,Трансферты,Межбюджетные трансферты,24000000,,1,1,0,0,0,UNKNOWN,SYNTHETIC_DEMO,synthetic
+2027,Сургут,EXPENDITURE,Образование,Учреждения образования,30000000,,0,1,0,0,0,FIXED,SYNTHETIC_DEMO,synthetic
+2027,Сургут,EXPENDITURE,Социальная политика,Социальные обязательства,16000000,,0,1,0,0,0,FIXED,SYNTHETIC_DEMO,synthetic
+2027,Сургут,EXPENDITURE,ЖКХ,Содержание инфраструктуры,13000000,,0,1,0,0,0,PARTIAL,SYNTHETIC_DEMO,synthetic
+2027,Сургут,EXPENDITURE,Транспорт,Транспортная инфраструктура,11000000,,0,1,0,0,0,PARTIAL,SYNTHETIC_DEMO,synthetic
+2027,Сургут,EXPENDITURE,Капвложения,Строительство объектов,18000000,,0,0,0,0,0,FLEXIBLE,SYNTHETIC_DEMO,synthetic
+2027,Сургут,EXPENDITURE,Управление,Текущие расходы,7000000,,0,1,0,0,0,PARTIAL,SYNTHETIC_DEMO,synthetic
+2027,Сургут,EXPENDITURE,Долг,Обслуживание долга,2000000,,0,1,0,1,0,FIXED,SYNTHETIC_DEMO,synthetic
+2027,Сургут,FINANCING,Остатки,Использование остатков,4000000,,0,0,0,0,0,UNKNOWN,SYNTHETIC_DEMO,synthetic
+2027,Сургут,FINANCING,Заимствования,Муниципальные заимствования,3000000,,0,0,0,0,1,UNKNOWN,SYNTHETIC_DEMO,synthetic
+2027,Сургут,EXCEPTION,Допустимые исключения,Проверенное исключение,1000000,,0,0,0,0,0,UNKNOWN,SYNTHETIC_DEMO,synthetic

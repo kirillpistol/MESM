@@ -1,0 +1,10 @@
+parser_id: prospective_financial_plan
+version: 1.0
+match:
+  filename_contains: ["Перспективный финансовый план"]
+outputs:
+  - fiscal_reference
+  - official_forecast_revision
+rules:
+  preserve_versions: true
+  compare_same_horizon_across_publication_dates: true

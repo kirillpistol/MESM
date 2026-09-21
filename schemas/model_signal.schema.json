@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MESM Model Signal",
+  "type": "object",
+  "required": ["municipality_id", "as_of_date", "state", "model_version"],
+  "properties": {
+    "municipality_id": {"type": "string"},
+    "as_of_date": {"type": "string", "format": "date"},
+    "state": {"enum": ["NORMAL", "OBSERVE", "WARNING", "EARLY_WARNING", "FISCAL_DIVERGENCE", "SYSTEMIC_STRESS", "UNCERTAIN"]},
+    "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+    "probability_margin": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+    "detector_disagreement": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+    "model_version": {"type": "string"}
+  }
+}

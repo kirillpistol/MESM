@@ -1,0 +1,21 @@
+frequencies:
+  DAY:
+    alignment: aggregate
+  WEEK:
+    alignment: preserve_or_monthly
+  MONTH:
+    alignment: preferred_predictive_grid
+  QUARTER:
+    alignment: official_snapshot
+  HALF_YEAR:
+    alignment: official_snapshot
+  YEAR:
+    alignment: official_snapshot
+  EVENT:
+    alignment: point_in_time
+
+rules:
+  never_forward_fill_actuals_across_publication_date: true
+  preserve_original_frequency: true
+  retain_as_of_date: true
+  retain_publication_date: true

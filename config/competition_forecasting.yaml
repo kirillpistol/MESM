@@ -1,0 +1,85 @@
+version: 1
+
+problem:
+  name: municipal_consumption_forecasting_and_early_shock_detection
+  frequency: MONTH
+  geography: MUNICIPALITY
+
+scope:
+  target_municipality:
+    name: Сургут
+    oktmo: "71876000"
+  training_network:
+    region_name: Ханты-Мансийский автономный округ — Югра
+    oktmo_prefix: "71"
+    ceiling: HMAO_ONLY
+  evaluation:
+    primary_holdout_year: 2024
+    historical_base_year: 2023
+    future_periods_without_actuals: context_or_forecast_only
+  national_scope_required: false
+  primary_target:
+    source_id: sberindex_cashless_spending_municipal
+    category_code: ALL
+    value_column: spending_nominal
+
+identity:
+  primary_key: oktmo
+  municipal_code_length: 8
+  official_registry: data/reference/municipality_registry.csv
+  source_aliases: data/reference/sberindex_municipality_aliases.csv
+  unresolved_name_policy: quarantine
+  model_requires_resolved_oktmo: true
+  name_is_never_primary_key: true
+  note: only approved SberIndex-name -> official OKTMO mappings can enter model training
+
+forecast:
+  protocol: rolling_origin_global_panel
+  random_split_forbidden: true
+  minimum_training_periods: 12
+  horizon_periods: [1]
+  primary_metric: MAE
+  secondary_metrics: [R2, WAPE, MASE, RMSE]
+  baselines:
+    - LAST_VALUE
+    - SEASONAL_NAIVE_12
+    - PROPHET
+  challengers:
+    - CATBOOST_GLOBAL
+    - LIGHTGBM_GLOBAL
+    - NHITS_GLOBAL
+    - PATCHTST_GLOBAL
+    - FOUNDATION_MODEL
+  champion_rule: lowest_holdout_MAE
+  tie_breakers: [stability_across_municipalities, R2, MASE]
+
+shock_detection:
+  residual_source: champion_forecast
+  standardization: rolling_robust_zscore
+  online_methods: [CUSUM, BOCPD]
+  offline_confirmation: [PELT]
+  state_sequence: [NORMAL, OBSERVE, WARNING, BREAK_CONFIRMED]
+  primary_objective: earliest_detection_at_controlled_false_alarm_rate
+  leakage_forbidden: true
+
+feature_layers:
+  - SBERINDEX_MOBILITY
+  - ROSSTAT_WAGES
+  - ROSSTAT_EMPLOYMENT_STRUCTURE
+  - MUNICIPAL_OFFICIAL_BUDGET
+  - CALENDAR
+  - WEATHER
+  - MACRO
+  - NEWS_EVENTS
+
+as_of_policy:
+  publication_time_required: true
+  use_future_information: false
+  news_alignment: aggregate_by_publication_period_then_lag
+
+competition_outputs:
+  - reproducible_code
+  - yaml_json_configs
+  - russian_methodology_report
+  - interactive_dashboard
+  - pdf_presentation

@@ -1,0 +1,9 @@
+parser_id: expenditure_obligations
+version: 1.0
+match:
+  filename_contains: ["Реестр расходных обязательств", "СВОД РЕЕСТРОВ"]
+outputs:
+  - expenditure_obligation
+rules:
+  preserve_report_plan_horizon_columns: true
+  do_not_collapse_transfer_types: true

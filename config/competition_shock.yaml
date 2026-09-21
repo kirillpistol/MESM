@@ -1,0 +1,35 @@
+version: 1
+
+source:
+  predictions: data/reports/competition/surgut_2024_grow_predictions.csv
+  residual_column: residual
+  status: DEVELOPMENT_RESIDUALS
+
+simulation:
+  method: BOOTSTRAP_REAL_RESIDUAL_POOL
+  path_length: 60
+  warmup: 12
+  runs: 300
+  target_null_path_fpr: 0.10
+  shock_sigmas: [1.0, 1.5, 2.0, 3.0]
+  durations: [1, 3, 6, 12]
+  directions: [-1, 1]
+  seed: 20260921
+
+detectors:
+  online:
+    - CUSUM
+    - PAGE_HINKLEY
+  offline_confirmation:
+    - PELT
+
+metrics:
+  online: [detection_rate, false_early_rate, median_delay_periods]
+  offline: [detection_rate, median_localization_error, null_path_fpr]
+
+interpretation:
+  pelt_is_early_warning: false
+  synthetic_benchmark_is_real_event_evidence: false
+  event_classes:
+    TRANSIENT_SHOCK: duration <= 3
+    REGIME_SHIFT: duration >= 6

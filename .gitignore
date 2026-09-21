@@ -1,0 +1,25 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+.env
+.env.*
+data/raw/*
+!data/raw/README.md
+!data/raw/.gitkeep
+data/quarantine/*
+!data/quarantine/.gitkeep
+data/intake/active/*
+data/intake/history/*
+data/intake/intake_log.csv
+secrets/
+*.key
+*.pem
+
+# Full intermediate official exports stay local; Git keeps reproducible code and processed snapshots.
+data/processed/official_quality_inputs_long_*.csv
+
+data/processed/sberindex_spending_monthly.csv
+data/quarantine/sberindex_spending_ambiguous.csv
+data/manifest/competition_dataset_manifest.csv
+data/reports/sberindex_spending_profile.json

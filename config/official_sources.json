@@ -1,0 +1,32 @@
+{
+  "sources": {
+    "surgut_budget_adopted_2025_2027": {
+      "authority": "Администрация города Сургута / Дума города Сургута",
+      "municipality_name": "Сургут",
+      "document_type": "ADOPTED_BUDGET",
+      "decision": "Решение Думы города от 23.12.2024 № 713-VII ДГ",
+      "publication_date": "2024-12-25",
+      "page_url": "https://admsurgut.ru/gorodskaya-vlast/administratsiya/strukturnye-podrazdeleniya/departament-finansov/byudzhet-i-finansy/byudzhet-goroda-surguta-/resheniya-o-byudzhete/2025-2027/reshenie-o-byudzhete-11/reshenie-dumy-goroda-ot-23-12-2024-713-vii-dg-o-byudzhete-gorodskogo-okruga-surgut-khanty-mansiyskog/reshenie-dumy-goroda-ot-23-12-2024-713-vii-dg-o-byudzhete-gorodskogo-okruga-surgut-khanty-mansiyskog-1/",
+      "allowed_extensions": [".xls", ".xlsx", ".docx"],
+      "required_title_tokens": [
+        "Приложение 1",
+        "Приложение 2",
+        "Приложение 3"
+      ]
+    },
+    "surgut_budget_execution_2025": {
+      "authority": "Администрация города Сургута / Дума города Сургута",
+      "municipality_name": "Сургут",
+      "document_type": "BUDGET_EXECUTION",
+      "decision": "Решение Думы города от 04.06.2026 № 1052-VII ДГ",
+      "publication_date": "2026-06-08",
+      "page_url": "https://admsurgut.ru/gorodskaya-vlast/administratsiya/strukturnye-podrazdeleniya/departament-finansov/byudzhet-i-finansy/byudzhet-goroda-surguta-/godovoy-otchet-ob-ispolnenii-byudzheta-goroda/2025-god_1746/reshenie-ob-ispolnenii-byudzheta-/reshenie-ob-ispolnenii-byudzheta-7-1/",
+      "allowed_extensions": [".xlsx", ".docx"],
+      "required_title_tokens": [
+        "Приложение 1",
+        "Приложение 2",
+        "Приложение 3"
+      ]
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Budget Provision",
+  "type": "object",
+  "required": ["municipality_id", "period", "source_id"],
+  "properties": {
+    "municipality_id": {"type": "string"},
+    "period": {"type": "string"},
+    "population": {"type": ["number", "null"]},
+    "estimated_revenue": {"type": ["number", "null"]},
+    "estimated_obligations": {"type": ["number", "null"]},
+    "bo_official": {"type": ["number", "null"]},
+    "bo_model": {"type": ["number", "null"]},
+    "tax_potential_official": {"type": ["number", "null"]},
+    "tax_potential_model": {"type": ["number", "null"]},
+    "equalization_grant": {"type": ["number", "null"]},
+    "source_id": {"type": "string"}
+  }
+}

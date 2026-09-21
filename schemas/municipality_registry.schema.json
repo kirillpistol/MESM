@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MESM Municipality Registry",
+  "type": "object",
+  "required": [
+    "oktmo",
+    "municipality_name",
+    "source_id",
+    "source_url",
+    "source_version",
+    "status"
+  ],
+  "properties": {
+    "oktmo": {
+      "type": "string",
+      "pattern": "^[0-9]{8}$"
+    },
+    "oktmo_full": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9]{11}$"
+    },
+    "municipality_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "municipality_type": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "region_name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "region_code": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9]{2}$"
+    },
+    "parent_oktmo": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "valid_from": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "valid_to": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "source_id": {
+      "type": "string"
+    },
+    "source_url": {
+      "type": "string"
+    },
+    "source_version": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "ACTIVE",
+        "INACTIVE"
+      ]
+    }
+  }
+}

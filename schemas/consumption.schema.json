@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Consumer Aggregate",
+  "type": "object",
+  "required": [
+    "oktmo",
+    "municipality_id",
+    "municipality_name",
+    "period_start",
+    "period_end",
+    "frequency",
+    "category",
+    "category_code",
+    "spending_nominal",
+    "data_status",
+    "identity_status",
+    "model_eligible"
+  ],
+  "properties": {
+    "municipality_id": {
+      "type": "string",
+      "pattern": "^[0-9]{8}$"
+    },
+    "oktmo": {
+      "type": "string",
+      "pattern": "^[0-9]{8}$"
+    },
+    "period_start": {
+      "type": "string",
+      "format": "date"
+    },
+    "period_end": {
+      "type": "string",
+      "format": "date"
+    },
+    "frequency": {
+      "enum": [
+        "WEEK",
+        "MONTH"
+      ]
+    },
+    "category": {
+      "type": "string"
+    },
+    "spending_nominal": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "spending_real": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "transactions": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "average_ticket": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "data_status": {
+      "enum": [
+        "official_public",
+        "bank_aggregate",
+        "synthetic"
+      ]
+    },
+    "category_code": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "municipality_name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "identity_status": {
+      "enum": [
+        "OKTMO_RESOLVED",
+        "UNRESOLVED",
+        "AMBIGUOUS_SOURCE_NAME"
+      ]
+    },
+    "model_eligible": {
+      "type": "boolean"
+    },
+    "source": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "obs_status": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "unit": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "source_municipality_name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

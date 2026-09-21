@@ -1,0 +1,17 @@
+parser_id: budget_quality
+version: 1.0
+match:
+  filename_contains: ["Расчет по итогам"]
+expected_sheets:
+  - Расчет
+  - Индикаторы
+  - Данные
+outputs:
+  - official_quality_input
+  - official_quality_formula
+  - official_quality_ranking
+rules:
+  execute_macros: false
+  recalculate_source_workbook_formulas: false
+  prefer_underlying_inputs: true
+on_unknown_schema: quarantine

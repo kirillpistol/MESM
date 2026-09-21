@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MESM Budget Project",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["year", "municipality_name", "budget_side", "group", "item_name", "amount"],
+    "properties": {
+      "year": {"type": "integer"},
+      "municipality_name": {"type": "string", "minLength": 1},
+      "budget_side": {"enum": ["REVENUE", "EXPENDITURE", "FINANCING", "EXCEPTION"]},
+      "group": {"type": "string", "minLength": 1},
+      "item_name": {"type": "string", "minLength": 1},
+      "amount": {"type": "number", "minimum": 0},
+      "item_code": {"type": ["string", "null"]},
+      "is_transfer": {"type": ["boolean", "integer", "string", "null"]},
+      "is_recurring": {"type": ["boolean", "integer", "string", "null"]},
+      "is_subvention": {"type": ["boolean", "integer", "string", "null"]},
+      "is_debt_service": {"type": ["boolean", "integer", "string", "null"]},
+      "is_borrowing": {"type": ["boolean", "integer", "string", "null"]},
+      "flexibility": {"enum": ["FIXED", "PARTIAL", "FLEXIBLE", "UNKNOWN", null]},
+      "source_file": {"type": ["string", "null"]},
+      "notes": {"type": ["string", "null"]}
+    },
+    "additionalProperties": true
+  }
+}

@@ -1,0 +1,22 @@
+version: 1.0
+as_of: "2026-09-20"
+status: "research_defaults_require_legal_verification"
+
+deficit:
+  general_ratio: 0.10
+  restricted_ratio: 0.05
+  source: "БК РФ ст. 92.1"
+  source_url: "https://www.consultant.ru/document/cons_doc_LAW_19702/6f11e8bb720f79997a479fc6c1e98b78f23c3755/"
+  note: "На 2026 год возможны специальные исключения; вводятся отдельно как verified eligible exceptions."
+
+municipal_debt:
+  general_ratio: 1.00
+  restricted_ratio: 0.50
+  source: "БК РФ ст. 107"
+  source_url: "https://www.consultant.ru/document/cons_doc_LAW_19702/7b5f77362fb1983215e0525ce8a2b08de83e1dbf/"
+  note: "Фактический применимый предел зависит от статуса муниципального образования и состава обязательств."
+
+debt_service:
+  general_ratio: 0.15
+  source: "БК РФ ст. 111"
+  source_url: "https://www.consultant.ru/document/cons_doc_LAW_19702/02869a50e9e055c1b447f82ee304c1f15e76f1f2/"

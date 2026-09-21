@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Interbudget Transfer",
+  "type": "object",
+  "required": ["municipality_id", "period_end", "transfer_type", "source_id"],
+  "properties": {
+    "municipality_id": {"type": "string"},
+    "oktmo": {"type": ["string", "null"]},
+    "period_end": {"type": "string", "format": "date"},
+    "transfer_type": {"enum": ["dotation", "subsidy", "subvention", "other_transfer", "unknown"]},
+    "source_level": {"enum": ["federal", "regional", "municipal_district", "settlement", "other", "unknown"]},
+    "plan_initial": {"type": ["number", "null"]},
+    "plan_approved": {"type": ["number", "null"]},
+    "plan_revised": {"type": ["number", "null"]},
+    "actual": {"type": ["number", "null"]},
+    "source_id": {"type": "string"}
+  }
+}
