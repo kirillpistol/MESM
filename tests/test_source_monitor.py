@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from dashboard.source_monitor import load_source_manifest, pipeline_snapshot, source_status_frame
+from dashboard.source_monitor import load_source_manifest, pipeline_snapshot, public_aggregate_status, source_status_frame
 
 
 def test_source_monitor_distinguishes_configured_and_downloaded(tmp_path: Path):
@@ -49,3 +49,13 @@ def test_source_monitor_distinguishes_configured_and_downloaded(tmp_path: Path):
     assert snap["configured_sources"] == 2
     assert snap["manifest_files"] == 1
     assert snap["fiscal_panel_ready"] is True
+
+
+def test_public_aggregate_status_handles_missing_and_damaged_report(tmp_path: Path):
+    assert public_aggregate_status(tmp_path)["status"] == "not_loaded"
+    target = tmp_path / "data" / "processed" / "public_aggregates.status.json"
+    target.parent.mkdir(parents=True)
+    target.write_text("{broken", encoding="utf-8")
+    assert public_aggregate_status(tmp_path)["status"] == "invalid_report"
+    target.write_text(json.dumps({"status": "partial", "sources": [{"source": "fns_7_ndfl", "status": "quarantined"}]}), encoding="utf-8")
+    assert public_aggregate_status(tmp_path)["status"] == "partial"

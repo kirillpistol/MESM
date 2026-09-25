@@ -34,8 +34,9 @@ from charts import (
     shock_benchmark_chart,
     shock_calibration_chart,
 )
+from cash_view import render_cash_dashboard
 from intake_ui import render_data_intake
-from source_monitor import load_source_manifest, pipeline_snapshot, source_status_frame
+from source_monitor import load_source_manifest, pipeline_snapshot, public_aggregate_status, source_status_frame
 from ui import (
     app_header,
     budget_path,
@@ -303,7 +304,7 @@ budget_project = load_current_dataset("budget_project", ROOT)
 sidebar_brand()
 page = st.sidebar.radio(
     "Навигация",
-    ["Обзор", "Модели", "Бюджет", "Монитор шоков", "БО", "Отчёт", "Источники", "Данные", "Ввод данных", "Методика"],
+    ["Обзор", "Модели", "Бюджет", "Кассовый контур", "Монитор шоков", "БО", "Отчёт", "Источники", "Данные", "Ввод данных", "Методика"],
     index=0,
     label_visibility="collapsed",
 )
@@ -389,6 +390,9 @@ system_bar(
 if page == "Ввод данных":
     render_data_intake(ROOT)
 
+if page == "Кассовый контур":
+    render_cash_dashboard()
+
 if page == "Обзор":
     if municipality is None:
         st.warning("Нет выбранного муниципалитета. Сначала загрузите корректный Reference Core во вкладке «Ввод данных».")
@@ -428,6 +432,12 @@ if page == "Обзор":
             {"label":"Улучшение к Prophet","value":prophet_delta,"meta":"снижение MAE"},
             {"label":"Online-детектор","value":online_leader,"meta":"устойчивый сдвиг"},
         ],
+    )
+    status_banner(
+        "КАССОВЫЙ КОНТУР · ПИЛОТ",
+        "Проверка кассовых корректировок доступна в отдельном разделе.",
+        "Сейчас там демонстрационные суммы. Для реального сигнала загрузите разрешённую выгрузку с КБК и датами доступности.",
+        tone="info",
     )
     pipeline([
         ("ДАННЫЕ", "СберИндекс + официальные муниципальные данные"),
@@ -953,6 +963,24 @@ if page == "Источники":
         {"label": "Budget snapshot", "value": "READY" if pipeline_state["budget_snapshot_ready"] else "MISSING", "meta": "processed budget plan", "tone": "positive" if pipeline_state["budget_snapshot_ready"] else "danger"},
         {"label": "Fiscal panel", "value": "READY" if pipeline_state["fiscal_panel_ready"] else "MISSING", "meta": "reference panel", "tone": "positive" if pipeline_state["fiscal_panel_ready"] else "danger"},
     ])
+    section_header("Доступность данных пилота", "КАССОВЫЙ КОНТУР",
+                   "Публичный годовой материал подтверждён; помесячный источник ожидает согласования.")
+    metric_grid([
+        {"label": "Годовое исполнение", "value": "ОПУБЛИКОВАНО", "meta": "проект и решение за 2024", "tone": "positive"},
+        {"label": "Форма 0503117", "value": "НУЖЕН ФАЙЛ", "meta": "месячная выгрузка финоргана", "tone": "warning"},
+        {"label": "Касса УФК", "value": "НУЖЕН ДОСТУП", "meta": "оперативные движения по КБК", "tone": "warning"},
+        {"label": "7-НДФЛ", "value": "ПУБЛИКУЕТСЯ", "meta": "муниципальные срезы ХМАО", "tone": "info"},
+    ])
+    st.caption("Проект решения не является формой 0503117. Суммы в разделе «Кассовый контур» помечены как демонстрационные до загрузки реальных файлов.")
+    public_state = public_aggregate_status(ROOT)
+    if public_state["status"] in {"partial", "stale", "invalid_report"}:
+        st.warning(f"Открытые агрегаты: {public_state['status']}. Последнюю проверенную версию нельзя считать свежей.")
+    elif public_state["status"] == "fresh":
+        st.success("Открытые агрегаты: последняя загрузка прошла проверки.")
+    else:
+        st.info("Открытые агрегаты ещё не загружены; пример конфигурации выключен до проверки реальных полей ФНС.")
+    if public_state["sources"]:
+        st.dataframe(pd.DataFrame(public_state["sources"]), hide_index=True, use_container_width=True)
     pipeline([
         ("SOURCE", "официальная веб-страница"),
         ("RAW", "XLS / XLSX / DOCX"),

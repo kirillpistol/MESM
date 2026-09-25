@@ -13,6 +13,19 @@ def load_source_manifest(root: str | Path) -> pd.DataFrame:
     return pd.read_csv(path, encoding="utf-8-sig")
 
 
+def public_aggregate_status(root: str | Path) -> dict[str, object]:
+    path = Path(root) / "data" / "processed" / "public_aggregates.status.json"
+    if not path.exists():
+        return {"status": "not_loaded", "sources": []}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        if payload.get("status") not in {"fresh", "partial", "stale"} or not isinstance(payload.get("sources"), list):
+            raise ValueError("Неизвестный статус")
+        return payload
+    except (OSError, ValueError, TypeError, AttributeError):
+        return {"status": "invalid_report", "sources": []}
+
+
 def source_status_frame(root: str | Path) -> pd.DataFrame:
     root = Path(root)
     config_path = root / "config" / "official_sources.json"

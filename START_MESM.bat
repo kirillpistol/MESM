@@ -50,13 +50,17 @@ if errorlevel 1 goto ERROR
 python scripts\validate_project.py
 if errorlevel 1 goto ERROR
 
+echo Checking dashboard and cash view...
+python -m pytest -q tests\test_cash_view.py tests\test_dashboard.py
+if errorlevel 1 goto ERROR
+
 echo.
 echo MESM is ready. Opening local interface...
 echo Browser URL: http://127.0.0.1:8501
 echo To stop MESM, return to this window and press Ctrl+C.
 echo.
 
-python -m streamlit run dashboard\app.py
+python -m streamlit run dashboard\app.py --server.address 127.0.0.1
 goto END
 
 :NO_PYTHON
