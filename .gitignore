@@ -23,3 +23,9 @@ data/processed/sberindex_spending_monthly.csv
 data/quarantine/sberindex_spending_ambiguous.csv
 data/manifest/competition_dataset_manifest.csv
 data/reports/sberindex_spending_profile.json
+
+data/cache/
+data/processed/public_aggregates.csv
+data/processed/grow_features_asof.csv
+data/processed/public_aggregates.status.json
+data/processed/public_aggregates.contracts.json

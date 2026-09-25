@@ -1,0 +1,23 @@
+{
+  "sources": [
+    {
+      "enabled": false,
+      "source": "fns_7_ndfl",
+      "url": "https://data.nalog.ru/opendata/7707329152-7ndfl/data-20260609-structure-20260609.csv",
+      "period": "2025",
+      "available_at": "2026-06-09",
+      "schema_version": "fns-7ndfl-20260609",
+      "category": "all",
+      "separator": ";",
+      "encoding": "utf-8",
+      "period_format": "%Y-%m-%d",
+      "columns": {
+        "oktmo": "REPLACE_WITH_VERIFIED_OKTMO_COLUMN",
+        "period": "REPLACE_WITH_PERIOD_END_COLUMN",
+        "indicator": "REPLACE_WITH_INDICATOR_COLUMN",
+        "value": "REPLACE_WITH_VALUE_COLUMN",
+        "unit": "REPLACE_WITH_UNIT_COLUMN"
+      }
+    }
+  ]
+}
