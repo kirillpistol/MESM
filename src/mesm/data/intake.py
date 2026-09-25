@@ -103,8 +103,9 @@ DATASET_SPECS: dict[str, DatasetSpec] = {
         produces="Автоматический расчет Budget Normalization без ручного ввода.",
         required_columns=(
             "year", "municipality_name", "stage", "total_revenue",
-            "revenue_base", "transfers", "expenditure", "deficit",
-            "financing_sources", "eligible_exceptions", "source_url", "publication_date",
+            "revenue_base", "additional_ndfl", "legal_deficit_base", "transfers",
+            "expenditure", "deficit", "financing_sources", "eligible_exceptions",
+            "source_url", "publication_date",
         ),
         optional_columns=(
             "debt_upper_limit", "debt_service", "exceptions_status",
@@ -310,8 +311,8 @@ def validate_dataset(dataset_key: str, frame: pd.DataFrame) -> ValidationResult:
 
     if dataset_key == "budget_official_plan":
         for column in (
-            "total_revenue", "revenue_base", "transfers", "expenditure",
-            "deficit", "financing_sources", "eligible_exceptions",
+            "total_revenue", "revenue_base", "additional_ndfl", "legal_deficit_base",
+            "transfers", "expenditure", "deficit", "financing_sources", "eligible_exceptions",
         ):
             if column in frame.columns:
                 values = pd.to_numeric(frame[column], errors="coerce")

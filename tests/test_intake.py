@@ -133,6 +133,8 @@ def test_validate_official_budget_plan():
         "stage": "ADOPTED",
         "total_revenue": 120.0,
         "revenue_base": 80.0,
+        "additional_ndfl": 10.0,
+        "legal_deficit_base": 70.0,
         "transfers": 40.0,
         "expenditure": 130.0,
         "deficit": 10.0,

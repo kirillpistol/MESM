@@ -6,7 +6,7 @@
     "type": "object",
     "required": [
       "year", "municipality_name", "stage", "total_revenue",
-      "revenue_base", "transfers", "expenditure", "deficit",
+      "revenue_base", "additional_ndfl", "legal_deficit_base", "transfers", "expenditure", "deficit",
       "financing_sources", "source_url", "publication_date"
     ],
     "properties": {
@@ -15,6 +15,8 @@
       "stage": {"type": "string"},
       "total_revenue": {"type": "number", "minimum": 0},
       "revenue_base": {"type": "number", "minimum": 0},
+      "additional_ndfl": {"type": "number", "minimum": 0},
+      "legal_deficit_base": {"type": "number", "minimum": 0},
       "transfers": {"type": "number", "minimum": 0},
       "expenditure": {"type": "number", "minimum": 0},
       "deficit": {"type": "number", "minimum": 0},

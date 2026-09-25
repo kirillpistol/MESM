@@ -125,11 +125,13 @@ MESM берет из официального документа:
 - расходы на обслуживание долга;
 - структуру расходов по разделам бюджетной классификации.
 
-RevenueBase = TotalRevenue - GratuitousReceipts.
+TaxNonTaxRevenue = TotalRevenue - GratuitousReceipts.
 
-RawNormalizationGap = max(Deficit - 10% * RevenueBase, 0).
+LegalDeficitBase = TaxNonTaxRevenue - AdditionalNDFLNorms.
 
-AllowedDeficit = 10% * RevenueBase + EligibleExceptions.
+RawNormalizationGap = max(Deficit - 10% * LegalDeficitBase, 0).
+
+AllowedDeficit = 10% * LegalDeficitBase + EligibleExceptions.
 
 NormalizationGap = max(Deficit - AllowedDeficit, 0).
 

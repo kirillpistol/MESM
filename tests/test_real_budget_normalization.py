@@ -12,7 +12,7 @@ def _result(year: int):
     frame = pd.read_csv(DATA, encoding="utf-8-sig")
     row = frame[frame["year"] == year].iloc[0]
     inputs = BudgetInputs(
-        revenue_base=float(row["revenue_base"]),
+        revenue_base=float(row["legal_deficit_base"]),
         transfers=float(row["transfers"]),
         expenditure=float(row["expenditure"]),
         eligible_exceptions=float(row["eligible_exceptions"]),
@@ -43,3 +43,11 @@ def test_real_2027_budget_fits_base_limit_without_exception():
     assert float(row["eligible_exceptions"]) == 0.0
     assert result.raw_normalization_gap == 0.0
     assert result.normalization_gap == 0.0
+
+
+
+def test_real_deficit_ratios_match_official_expertise():
+    expected = {2025: 13.3, 2026: 11.9, 2027: 5.8}
+    for year, ratio in expected.items():
+        _, result = _result(year)
+        assert round(result.deficit_ratio * 100, 1) == ratio
