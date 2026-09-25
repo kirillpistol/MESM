@@ -8,8 +8,8 @@ from dataclasses import dataclass, replace
 class BudgetInputs:
     revenue_base: float
     transfers: float
-    deficit_base: float | None = None
     expenditure: float
+    deficit_base: float | None = None
     eligible_exceptions: float = 0.0
     recurring_revenue: float = 0.0
     recurring_expenditure: float = 0.0
