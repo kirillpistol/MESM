@@ -145,14 +145,14 @@ def render_cash_dashboard() -> None:
     fig.update_layout(title="Движение по месяцам", height=370, template="plotly_white",
                       margin=dict(l=20, r=20, t=50, b=20), yaxis_title=unit,
                       legend=dict(orientation="h", y=1.14))
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
     section_header("Проверка расчёта", "АУДИТ", "Кассовые суммы сохраняются отдельно от аналитического ряда.")
     display = frame.rename(columns={"month": "Месяц", "raw_revenue": "Доходы касса",
                                     "normalized_revenue": "Доходы регулярные", "raw_expenditure": "Расходы касса",
                                     "cash_balance": "Остаток", "reserve_need": "Потребность", "status": "Статус"})
     st.dataframe(display[["Месяц", "Доходы касса", "Доходы регулярные", "Расходы касса",
-                          "Остаток", "Потребность", "Статус"]], hide_index=True, use_container_width=True)
+                          "Остаток", "Потребность", "Статус"]], hide_index=True, width="stretch")
     if corrections:
         with st.expander(f"Журнал корректировок · {len(corrections)}"):
-            st.dataframe(pd.DataFrame([row.__dict__ for row in corrections]), hide_index=True, use_container_width=True)
+            st.dataframe(pd.DataFrame([row.__dict__ for row in corrections]), hide_index=True, width="stretch")
     st.caption("Месячный план и реальный начальный остаток подключаются после согласования источника. «Разрыв нормализации» бюджетных лимитов здесь не пересчитывается.")

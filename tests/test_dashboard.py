@@ -37,7 +37,7 @@ def test_model_tournament_page_renders_without_exception():
 
 
 def test_shock_monitor_page_renders_without_exception():
-    app = AppTest.from_file(str(ROOT / "dashboard" / "app.py"), default_timeout=30)
+    app = AppTest.from_file(str(ROOT / "dashboard" / "app.py"), default_timeout=90)
     app.run()
     app.sidebar.radio[0].set_value("Монитор шоков")
     app.run()

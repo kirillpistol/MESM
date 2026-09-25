@@ -50,8 +50,8 @@ if errorlevel 1 goto ERROR
 python scripts\validate_project.py
 if errorlevel 1 goto ERROR
 
-echo Checking dashboard and cash view...
-python -m pytest -q tests\test_cash_view.py tests\test_dashboard.py
+echo Checking dashboard dependencies and cash calculations...
+python scripts\smoke_dashboard.py
 if errorlevel 1 goto ERROR
 
 echo.

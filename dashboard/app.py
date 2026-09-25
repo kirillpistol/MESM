@@ -473,7 +473,7 @@ if page == "Обзор":
         }
         for item in domains
     ])
-    st.dataframe(domain_frame, use_container_width=True, hide_index=True)
+    st.dataframe(domain_frame, width="stretch", hide_index=True)
 
     with st.expander("Технические Reference-показатели"):
         cols = st.columns(5)
@@ -490,7 +490,7 @@ if page == "Обзор":
     section_header("Динамика Reference-признаков", "ДИНАМИКА", "Годовые признаки публичного Reference Layer.")
     st.plotly_chart(
         reference_trend_chart(current),
-        use_container_width=True,
+        width="stretch",
         config={"displayModeBar": False, "responsive": True},
     )
 
@@ -534,7 +534,7 @@ if page == "Модели":
         ])
         st.plotly_chart(
             model_tournament_chart(ranked),
-            use_container_width=True,
+            width="stretch",
             config={"displayModeBar": False, "responsive": True},
         )
         if PROPHET_PREDICTIONS_PATH.exists() and GROW_PREDICTIONS_PATH.exists():
@@ -547,7 +547,7 @@ if page == "Модели":
             grow_predictions=pd.read_csv(GROW_PREDICTIONS_PATH,encoding="utf-8-sig")
             st.plotly_chart(
                 competition_forecast_chart(prophet_predictions,grow_predictions),
-                use_container_width=True,
+                width="stretch",
                 config={"displayModeBar": False, "responsive": True},
             )
         display = ranked[["model", "observations", "mae", "r2", "wape", "rmse", "mase", "status"]].copy()
@@ -559,7 +559,7 @@ if page == "Модели":
                 "rmse": "{:,.2f}",
                 "mase": "{:.3f}",
             }),
-            use_container_width=True,
+            width="stretch",
             hide_index=True,
         )
         status_banner(
@@ -639,7 +639,7 @@ if page == "Бюджет":
             {"Показатель": "Проверенные исключения", "Значение": eligible_exceptions},
             {"Показатель": "Разрыв после исключений", "Значение": budget_result.normalization_gap},
         ])
-        st.dataframe(base_table.style.format({"Значение": "{:,.2f}"}), use_container_width=True, hide_index=True)
+        st.dataframe(base_table.style.format({"Значение": "{:,.2f}"}), width="stretch", hide_index=True)
 
         metric_grid([
             {"label": "Financing sources", "value": f"{financing_sources / 1_000_000:.3f} млрд ₽", "meta": "official financing", "tone": "info"},
@@ -651,7 +651,7 @@ if page == "Бюджет":
         section_header("Доходы → баланс", "BUDGET FLOW", "Как собственные доходы и трансферты соотносятся с расходами.")
         st.plotly_chart(
             budget_waterfall_chart(revenue_base, transfers, expenditure),
-            use_container_width=True,
+            width="stretch",
             config={"displayModeBar": False, "responsive": True},
         )
 
@@ -668,7 +668,7 @@ if page == "Бюджет":
         section_header("Расчет", "FORMULA TRACE", "Промежуточные значения, из которых MESM получает итоговый разрыв.")
         st.dataframe(
             formula_table.style.format({"Значение": "{:,.2f}"}),
-            use_container_width=True,
+            width="stretch",
             hide_index=True,
         )
 
@@ -689,7 +689,7 @@ if page == "Бюджет":
             )
             st.plotly_chart(
                 expenditure_structure_chart(expense_structure),
-                use_container_width=True,
+                width="stretch",
                 config={"displayModeBar": False, "responsive": True},
             )
             with st.expander("Структура расходов — таблица"):
@@ -698,7 +698,7 @@ if page == "Бюджет":
                         "amount": "{:,.2f}",
                         "share": "{:.1%}",
                     }),
-                    use_container_width=True,
+                    width="stretch",
                     hide_index=True,
                 )
 
@@ -742,14 +742,14 @@ if page == "Монитор шоков":
         )
         st.plotly_chart(
             shock_benchmark_chart(shock_summary),
-            use_container_width=True,
+            width="stretch",
             config={"displayModeBar": False, "responsive": True},
         )
         cols=st.columns([1.25,1])
         with cols[0]:
             st.plotly_chart(
                 shock_calibration_chart(shock_calibration),
-                use_container_width=True,
+                width="stretch",
                 config={"displayModeBar": False, "responsive": True},
             )
         with cols[1]:
@@ -826,15 +826,15 @@ if page == "Монитор шоков":
                 for row in metric_rows
             ])
             st.markdown("**Forecast vs Actual — expanding one-step benchmark**")
-            st.dataframe(metrics_frame.round(4), use_container_width=True, hide_index=True)
+            st.dataframe(metrics_frame.round(4), width="stretch", hide_index=True)
 
             st.plotly_chart(
                 forecast_actual_chart(forecast_table),
-                use_container_width=True,
+                width="stretch",
                 config={"displayModeBar": False, "responsive": True},
             )
             with st.expander("Forecast vs Actual — таблица"):
-                st.dataframe(forecast_table.round(4), use_container_width=True, hide_index=True)
+                st.dataframe(forecast_table.round(4), width="stretch", hide_index=True)
 
     st.markdown("#### Synthetic Demo")
     control_a, control_b = st.columns(2)
@@ -855,7 +855,7 @@ if page == "Монитор шоков":
 
     st.plotly_chart(
         shock_monitor_chart(demo),
-        use_container_width=True,
+        width="stretch",
         config={"displayModeBar": False, "responsive": True},
     )
 
@@ -871,7 +871,7 @@ if page == "Монитор шоков":
             "state",
             "reason",
         ]].round({"residual": 3, "z_score": 3}),
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
     )
 
@@ -890,7 +890,7 @@ if page == "БО":
 
         st.plotly_chart(
             bo_history_chart(selected_bo),
-            use_container_width=True,
+            width="stretch",
             config={"displayModeBar": False, "responsive": True},
         )
         st.dataframe(
@@ -905,7 +905,7 @@ if page == "БО":
                 "bo_calculated",
                 "equalization_support",
             ]],
-            use_container_width=True,
+            width="stretch",
             hide_index=True,
         )
 
@@ -940,14 +940,14 @@ if page == "Отчёт":
         data=report_html.encode("utf-8"),
         file_name=f"MESM_{safe_name}_{latest_year or 'current'}.html",
         mime="text/html",
-        use_container_width=True,
+        width="stretch",
     )
     st.download_button(
         "Скачать данные муниципалитета CSV",
         data=current.to_csv(index=False).encode("utf-8-sig"),
         file_name=f"MESM_{safe_name}_reference.csv",
         mime="text/csv",
-        use_container_width=True,
+        width="stretch",
     )
 
 if page == "Источники":
@@ -980,7 +980,7 @@ if page == "Источники":
     else:
         st.info("Открытые агрегаты ещё не загружены; пример конфигурации выключен до проверки реальных полей ФНС.")
     if public_state["sources"]:
-        st.dataframe(pd.DataFrame(public_state["sources"]), hide_index=True, use_container_width=True)
+        st.dataframe(pd.DataFrame(public_state["sources"]), hide_index=True, width="stretch")
     pipeline([
         ("SOURCE", "официальная веб-страница"),
         ("RAW", "XLS / XLSX / DOCX"),
@@ -1010,7 +1010,7 @@ if page == "Источники":
             "source_id", "municipality_name", "document_type", "publication_date",
             "status", "manifest_files", "decision"
         ]],
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
     )
 
@@ -1029,23 +1029,23 @@ if page == "Источники":
         if "sha256" in manifest_view:
             manifest_view["sha256"] = manifest_view["sha256"].astype(str).str.slice(0, 16) + "…"
         section_header("Raw manifest", "SHA-256", "Фактически скачанные файлы и их отпечатки.")
-        st.dataframe(manifest_view, use_container_width=True, hide_index=True)
+        st.dataframe(manifest_view, width="stretch", hide_index=True)
 
 if page == "Данные":
     st.subheader("Канонические данные")
-    st.dataframe(current, use_container_width=True, hide_index=True)
+    st.dataframe(current, width="stretch", hide_index=True)
     if not selected_bo.empty:
         with st.expander("Расчетные данные БО"):
-            st.dataframe(selected_bo, use_container_width=True, hide_index=True)
+            st.dataframe(selected_bo, width="stretch", hide_index=True)
     if not external.empty:
         with st.expander("External Data Layer"):
-            st.dataframe(external, use_container_width=True, hide_index=True)
+            st.dataframe(external, width="stretch", hide_index=True)
     if not budget_official_plan.empty:
         with st.expander("Официальные параметры бюджета"):
-            st.dataframe(budget_official_plan, use_container_width=True, hide_index=True)
+            st.dataframe(budget_official_plan, width="stretch", hide_index=True)
     if not budget_project.empty:
         with st.expander("Структура бюджета"):
-            st.dataframe(budget_project, use_container_width=True, hide_index=True)
+            st.dataframe(budget_project, width="stretch", hide_index=True)
 
 if page == "Методика":
     st.subheader("Методология MESM")

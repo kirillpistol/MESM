@@ -83,7 +83,7 @@ def render_data_intake(root: Path) -> None:
         pd.DataFrame(status_rows)[
             ["title", "mode", "period", "municipalities", "rows", "quality", "modified", "sha256", "path"]
         ],
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
     )
 
@@ -145,7 +145,7 @@ def render_data_intake(root: Path) -> None:
             }
             st.dataframe(
                 pd.DataFrame([{"Проверка": k, "Значение": v} for k, v in protocol.items()]),
-                use_container_width=True,
+                width="stretch",
                 hide_index=True,
             )
 
@@ -165,7 +165,7 @@ def render_data_intake(root: Path) -> None:
                 st.warning(warning)
 
             with st.expander("Preview первых 20 строк", expanded=validation.valid):
-                st.dataframe(frame.head(20), use_container_width=True, hide_index=True)
+                st.dataframe(frame.head(20), width="stretch", hide_index=True)
 
             if not validation.valid:
                 st.error("REJECTED: активный набор не изменен.")
@@ -188,7 +188,7 @@ def render_data_intake(root: Path) -> None:
                 type="primary",
                 disabled=not accept_allowed,
                 key=f"accept_{dataset_key}",
-                use_container_width=True,
+                width="stretch",
             ):
                 before_panel = _read_panel(root)
                 with st.spinner("Версионирую файл и пересчитываю MESM..."):
@@ -217,7 +217,7 @@ def render_data_intake(root: Path) -> None:
     if log.empty:
         st.caption("Пользовательских загрузок пока нет.")
     else:
-        st.dataframe(log, use_container_width=True, hide_index=True)
+        st.dataframe(log, width="stretch", hide_index=True)
 
     st.markdown("#### Pipeline")
     st.code(
