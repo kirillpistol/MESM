@@ -90,9 +90,21 @@ def _month(value: date) -> date:
 
 
 def monthly_from_ytd(lines: list[CashLine]) -> list[CashLine]:
+    latest_report: dict[tuple[str, date, str, Side], CashLine] = {}
+    selected = [line for line in lines if line.source != "REPORT_0503117"]
+    for line in lines:
+        if line.source != "REPORT_0503117":
+            continue
+        key = (line.municipality, line.month, line.kbk, line.side)
+        previous_line = latest_report.get(key)
+        if previous_line is not None and previous_line.available_at == line.available_at:
+            raise ValueError("Повтор строки КБК в одном срезе отчёта")
+        if previous_line is None or line.available_at > previous_line.available_at:
+            latest_report[key] = line
+    selected.extend(latest_report.values())
     previous: dict[tuple[str, str, Side, Source, int], tuple[int, float]] = {}
     result: list[CashLine] = []
-    for line in sorted(lines, key=lambda row: (row.month, row.kbk, row.side)):
+    for line in sorted(selected, key=lambda row: (row.month, row.kbk, row.side)):
         _month(line.month)
         if line.period_basis == "MONTH":
             result.append(line)

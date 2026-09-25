@@ -26,6 +26,8 @@ def test_ytd_to_monthly_and_asof_revision():
            line(FEB, "NDFL", "REVENUE", 90, basis="YTD")]
     monthly = monthly_from_ytd(ytd)
     assert [row.amount for row in monthly] == [100, -10]
+    corrected_ytd = line(FEB, "NDFL", "REVENUE", 80, available=date(2026, 5, 21), basis="YTD")
+    assert monthly_from_ytd(ytd + [corrected_ytd])[1].amount == -20
     revised = line(FEB, "NDFL", "REVENUE", -12, available=date(2026, 5, 19))
     out = normalize_cash([monthly[0], monthly[1], revised], [], as_of=AS_OF,
                          municipality="Surgut", source="REPORT_0503117")
