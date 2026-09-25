@@ -15,9 +15,9 @@ TotalRevenue = RevenueBase + Transfers
 
 Deficit = max(Expenditure - TotalRevenue, 0)
 
-DeficitRatio = Deficit / RevenueBase
+DeficitRatio = Deficit / LegalDeficitBase
 
-BaseDeficitLimit = DeficitLimitRatio * RevenueBase
+BaseDeficitLimit = DeficitLimitRatio * LegalDeficitBase
 
 AllowedDeficit = BaseDeficitLimit + EligibleExceptions
 

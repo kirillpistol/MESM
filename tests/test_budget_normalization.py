@@ -141,3 +141,17 @@ def test_raw_gap_before_exceptions():
     ))
     assert result.raw_normalization_gap == 5.0
     assert result.normalization_gap == 0.0
+
+
+
+def test_deficit_base_can_differ_from_revenue_base():
+    result = calculate_budget(BudgetInputs(
+        revenue_base=120.0,
+        transfers=30.0,
+        deficit_base=100.0,
+        expenditure=165.0,
+        deficit_limit_ratio=0.10,
+    ))
+    assert result.deficit == 15.0
+    assert result.deficit_ratio == 0.15
+    assert result.base_deficit_limit == 10.0

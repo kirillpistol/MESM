@@ -12,8 +12,9 @@ def _result(year: int):
     frame = pd.read_csv(DATA, encoding="utf-8-sig")
     row = frame[frame["year"] == year].iloc[0]
     inputs = BudgetInputs(
-        revenue_base=float(row["legal_deficit_base"]),
+        revenue_base=float(row["revenue_base"]),
         transfers=float(row["transfers"]),
+        deficit_base=float(row["legal_deficit_base"]),
         expenditure=float(row["expenditure"]),
         eligible_exceptions=float(row["eligible_exceptions"]),
         financing_sources=float(row["financing_sources"]),

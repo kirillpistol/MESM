@@ -577,9 +577,9 @@ if page == "Бюджет":
         budget_year = st.selectbox("Год", years, index=0)
         selected_plan = official_rows[official_rows["year"] == budget_year].iloc[-1]
 
-        tax_nontax_base = float(selected_plan["revenue_base"])
+        revenue_base = float(selected_plan["revenue_base"])
         additional_ndfl = float(selected_plan["additional_ndfl"])
-        revenue_base = float(selected_plan["legal_deficit_base"])
+        legal_deficit_base = float(selected_plan["legal_deficit_base"])
         transfers = float(selected_plan["transfers"])
         expenditure = float(selected_plan["expenditure"])
         eligible_exceptions = float(selected_plan["eligible_exceptions"])
@@ -590,6 +590,7 @@ if page == "Бюджет":
         budget_inputs = BudgetInputs(
             revenue_base=revenue_base,
             transfers=transfers,
+            deficit_base=legal_deficit_base,
             expenditure=expenditure,
             eligible_exceptions=eligible_exceptions,
             current_debt=debt_upper_limit,
@@ -611,7 +612,7 @@ if page == "Бюджет":
         ])
 
         budget_path([
-            ("База ст. 92.1", revenue_base / 1_000_000, "база"),
+            ("База ст. 92.1", legal_deficit_base / 1_000_000, "база"),
             ("10% base limit", budget_result.base_deficit_limit / 1_000_000, "лимит"),
             ("Actual deficit", budget_result.deficit / 1_000_000, "факт"),
             ("Eligible exceptions", eligible_exceptions / 1_000_000, "исключения"),
@@ -620,9 +621,9 @@ if page == "Бюджет":
 
         section_header("Расчетная база", "СТ. 92.1", "Доходы без безвозмездных поступлений и НДФЛ по дополнительным нормативам.")
         base_table = pd.DataFrame([
-            {"Показатель": "Налоговые и неналоговые доходы", "Значение": tax_nontax_base},
+            {"Показатель": "Налоговые и неналоговые доходы", "Значение": revenue_base},
             {"Показатель": "НДФЛ по дополнительным нормативам", "Значение": additional_ndfl},
-            {"Показатель": "База для предела дефицита", "Значение": revenue_base},
+            {"Показатель": "База для предела дефицита", "Значение": legal_deficit_base},
             {"Показатель": "Базовый предел 10%", "Значение": budget_result.base_deficit_limit},
             {"Показатель": "Разрыв до исключений", "Значение": budget_result.raw_normalization_gap},
             {"Показатель": "Проверенные исключения", "Значение": eligible_exceptions},

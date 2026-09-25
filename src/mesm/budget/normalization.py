@@ -8,6 +8,7 @@ from dataclasses import dataclass, replace
 class BudgetInputs:
     revenue_base: float
     transfers: float
+    deficit_base: float | None = None
     expenditure: float
     eligible_exceptions: float = 0.0
     recurring_revenue: float = 0.0
@@ -82,9 +83,12 @@ def calculate_budget(inputs: BudgetInputs) -> BudgetResult:
     total_revenue = inputs.revenue_base + inputs.transfers
     balance = total_revenue - inputs.expenditure
     deficit = max(-balance, 0.0)
-    deficit_ratio = _ratio(deficit, inputs.revenue_base)
+    deficit_base = inputs.revenue_base if inputs.deficit_base is None else inputs.deficit_base
+    if deficit_base < 0:
+        raise ValueError("deficit_base не может быть отрицательной")
+    deficit_ratio = _ratio(deficit, deficit_base)
 
-    base_limit = inputs.revenue_base * inputs.deficit_limit_ratio
+    base_limit = deficit_base * inputs.deficit_limit_ratio
     raw_normalization_gap = max(deficit - base_limit, 0.0)
     allowed_deficit = base_limit + inputs.eligible_exceptions
     normalization_gap = max(deficit - allowed_deficit, 0.0)
