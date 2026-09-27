@@ -90,6 +90,11 @@ def _month(value: date) -> date:
 
 
 def monthly_from_ytd(lines: list[CashLine]) -> list[CashLine]:
+    """Выбрать доступную версию 0503117 и взять разность соседних YTD-месяцев.
+
+    Сравнение выполняется отдельно по МО, КБК, стороне, источнику и году;
+    пропуск месяца или отсутствие января делают производный поток недостоверным.
+    """
     latest_report: dict[tuple[str, date, str, Side], CashLine] = {}
     selected = [line for line in lines if line.source != "REPORT_0503117"]
     for line in lines:
@@ -130,6 +135,14 @@ def normalize_cash(lines: list[CashLine], corrections: list[ManualCorrection], *
                    deflators: dict[date, float] | None = None,
                    season_factors: dict[tuple[date, str], float] | None = None,
                    opening_balance: float = 0.0) -> list[CashMonth]:
+    """Построить сырой и аналитически скорректированный месячный контур.
+
+    Данные и утверждения фильтруются по as_of. Корректировки меняют только
+    аналитический ряд; исходные кассовые суммы сохраняются. Возвраты и авансы
+    переносятся между месяцами, разовые суммы исключаются из регулярного ряда.
+    Остаток и финансирование влияют на кассовый баланс, но не на регулярный
+    баланс доходов и расходов. Правила и формулы: docs/30_function_reference.md.
+    """
     if opening_balance < 0 or not isfinite(opening_balance):
         raise ValueError("Начальный остаток должен быть конечным и неотрицательным")
     chosen = [row for row in lines if row.municipality == municipality and row.source == source
@@ -158,6 +171,7 @@ def normalize_cash(lines: list[CashLine], corrections: list[ManualCorrection], *
         raw.setdefault(row.month, {"REVENUE": 0.0, "EXPENDITURE": 0.0, "FINANCING": 0.0})[row.side] += row.amount
         key = (row.month, row.kbk, row.side)
         by_key[key] = by_key.get(key, 0.0) + row.amount
+    # Корректировки применяются к копии: сырое исполнение всегда воспроизводимо.
     adjusted = {month: dict(values) for month, values in raw.items()}
     adjusted_key = dict(by_key)
     carryover_by_month: dict[date, float] = {}
@@ -221,6 +235,7 @@ def normalize_cash(lines: list[CashLine], corrections: list[ManualCorrection], *
     balance = opening_balance
     for month in sorted(raw):
         r, a = raw[month], adjusted[month]
+        # Остаток прошлых периодов не считается новым поступлением второй раз.
         balance += r["REVENUE"] + r["FINANCING"] - carryover_by_month.get(month, 0.0) - r["EXPENDITURE"]
         recurring = a["REVENUE"] - a["EXPENDITURE"]
         deflator = None if deflators is None else deflators.get(month)

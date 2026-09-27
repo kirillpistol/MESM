@@ -62,6 +62,12 @@ def _ratio(num: float, den: float) -> float:
 
 
 def calculate_budget(inputs: BudgetInputs) -> BudgetResult:
+    """Рассчитать ограничения по бюджету из явно заданных входных сумм.
+
+    Это бюджетный разрыв относительно настроенного предела дефицита,
+    а не экспертная нормализация помесячного кассового движения.
+    Пределы в BudgetInputs — параметры пилота, не утверждённые нормативы.
+    """
     values = (
         inputs.revenue_base,
         inputs.transfers,
@@ -193,7 +199,13 @@ class AutoScenario:
 
 
 def gap_structure(inputs: BudgetInputs, result: BudgetResult) -> GapStructure:
-    """Механическая структура разрыва без причинной интерпретации."""
+    """Механическая структура разрыва и изолированные способы его закрытия.
+
+    Оценка роста revenue_base предполагает deficit_base == revenue_base:
+    доход уменьшает дефицит и расширяет предел. При отдельной deficit_base
+    результат revenue_base_to_close служит только иллюстрацией и требует
+    отдельного пересчёта сценарием.
+    """
     gap = result.normalization_gap
     structural_overlap = min(result.structural_gap, gap)
     non_structural = max(gap - structural_overlap, 0.0)
