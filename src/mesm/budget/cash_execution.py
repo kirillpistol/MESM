@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import date
 from math import isfinite
 from typing import Literal
@@ -25,6 +25,22 @@ class CashLine:
     source_document: str
     period_basis: Literal["MONTH", "YTD"] = "MONTH"
     preliminary: bool = True
+    kfsr: str = ""
+    kvr: str = ""
+    target_code: str = ""
+    document_id: str = ""
+    preliminary_status: str = ""
+
+    def __post_init__(self) -> None:
+        status = self.preliminary_status or ("operational" if self.source == "UFK_CASH" and self.preliminary else "preliminary" if self.preliminary else "final")
+        if status not in {"operational", "preliminary", "final"}:
+            raise ValueError("Статус данных: operational, preliminary или final")
+        if self.preliminary != (status != "final"):
+            raise ValueError("Статус данных противоречит признаку preliminary")
+        for label, value, length in [("КФСР", self.kfsr, 4), ("КВР", self.kvr, 3)]:
+            if value and (not value.isascii() or not value.isdigit() or len(value) != length):
+                raise ValueError(f"{label}: требуется {length} цифры")
+        object.__setattr__(self, "preliminary_status", status)
 
 
 @dataclass(frozen=True)
@@ -41,6 +57,10 @@ class ManualCorrection:
     approved_by: str
     approved_at: date
     target_month: date | None = None
+    kvr: str = ""
+    document_number: str = ""
+    effective_date: date | None = None
+    is_manual: bool = True
 
 
 @dataclass(frozen=True)
@@ -100,7 +120,7 @@ def monthly_from_ytd(lines: list[CashLine]) -> list[CashLine]:
     for line in lines:
         if line.source != "REPORT_0503117":
             continue
-        key = (line.municipality, line.month, line.kbk, line.side)
+        key = (line.municipality, line.month, line.kbk, line.side, line.kfsr, line.kvr, line.target_code)
         previous_line = latest_report.get(key)
         if previous_line is not None and previous_line.available_at == line.available_at:
             raise ValueError("Повтор строки КБК в одном срезе отчёта")
@@ -114,7 +134,7 @@ def monthly_from_ytd(lines: list[CashLine]) -> list[CashLine]:
         if line.period_basis == "MONTH":
             result.append(line)
             continue
-        key = (line.municipality, line.kbk, line.side, line.source, line.month.year)
+        key = (line.municipality, line.kbk, line.side, line.source, line.month.year, line.kfsr, line.kvr, line.target_code)
         if key in previous:
             prev_month, prev_total = previous[key]
             if line.month.month != prev_month + 1:
@@ -123,9 +143,7 @@ def monthly_from_ytd(lines: list[CashLine]) -> list[CashLine]:
             raise ValueError(f"Нет январской базы для КБК {line.kbk}")
         else:
             prev_total = 0.0
-        result.append(CashLine(line.municipality, line.month, line.kbk, line.side,
-                               line.amount - prev_total, line.source, line.available_at,
-                               line.source_document, "MONTH", line.preliminary))
+        result.append(replace(line, amount=line.amount - prev_total, period_basis="MONTH"))
         previous[key] = (line.month.month, line.amount)
     return result
 
@@ -150,7 +168,7 @@ def normalize_cash(lines: list[CashLine], corrections: list[ManualCorrection], *
     if source == "REPORT_0503117":
         latest: dict[tuple[date, str, Side], CashLine] = {}
         for row in chosen:
-            key = (row.month, row.kbk, row.side)
+            key = (row.month, row.kbk, row.side, row.kfsr, row.kvr, row.target_code)
             if key in latest and row.available_at == latest[key].available_at:
                 raise ValueError("Повтор строки КБК в одном срезе отчёта")
             if key not in latest or row.available_at > latest[key].available_at:
@@ -179,7 +197,7 @@ def normalize_cash(lines: list[CashLine], corrections: list[ManualCorrection], *
     allocated: dict[tuple[date, str, Side, Kind], float] = {}
     positive_exclusions: dict[tuple[date, str, Side], float] = {}
     for correction in corrections:
-        if correction.municipality != municipality or correction.approved_at > as_of:
+        if correction.municipality != municipality or correction.approved_at > as_of or (correction.effective_date is not None and correction.effective_date > as_of):
             continue
         if correction.correction_id in used:
             raise ValueError("Повторный идентификатор корректировки")
@@ -189,6 +207,12 @@ def normalize_cash(lines: list[CashLine], corrections: list[ManualCorrection], *
             raise ValueError("Корректировка требует основания, утверждения и положительной суммы")
         if correction.cash_month not in raw or correction.approved_at < correction.cash_month:
             raise ValueError("Корректировка не соответствует доступному кассовому месяцу")
+        if correction.kvr:
+            if not correction.kvr.isdigit() or len(correction.kvr) != 3:
+                raise ValueError("КВР корректировки должен содержать 3 цифры; для доходов используйте kbk")
+            matching = [row for row in chosen if row.month == correction.cash_month and row.kbk == correction.kbk and row.side == correction.side]
+            if not matching or any(row.kvr != correction.kvr for row in matching):
+                raise ValueError("КВР поправки не соответствует строкам КБК; разделите смешанную выгрузку")
         observed = by_key.get((correction.cash_month, correction.kbk, correction.side), 0.0)
         cash_key = (correction.cash_month, correction.kbk, correction.side)
         allocation_key = (correction.cash_month, correction.kbk, correction.side, correction.kind)

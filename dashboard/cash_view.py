@@ -11,6 +11,8 @@ from mesm.budget.cash_execution import CashLine, ManualCorrection, monthly_from_
 from ui import metric_grid, section_header, status_banner
 
 
+CORRECTION_LABELS = dict(zip(["correction_id", "kind", "municipality", "kbk", "side", "cash_month", "amount", "reason", "evidence", "approved_by", "approved_at", "target_month", "kvr", "document_number", "effective_date", "is_manual"], ["ID поправки", "Вид поправки", "Муниципалитет", "КБК", "Сторона бюджета", "Кассовый месяц", "Сумма", "Причина", "Основание", "Утвердил", "Дата утверждения", "Целевой месяц", "КВР", "Номер документа", "Действует с", "Ручная поправка"]))
+
 CASH_COLUMNS = ["municipality", "month", "kbk", "side", "amount", "source", "available_at", "source_document", "period_basis", "preliminary"]
 CORRECTION_COLUMNS = ["correction_id", "kind", "municipality", "kbk", "side", "cash_month", "amount", "reason", "evidence", "approved_by", "approved_at", "target_month"]
 
@@ -38,7 +40,8 @@ def parse_cash_csv(content: bytes) -> list[CashLine]:
                                row["side"].strip(), float(row["amount"].replace(",", ".")),
                                row["source"].strip(), _date(row["available_at"]),
                                row["source_document"].strip(), row["period_basis"].strip(),
-                               row["preliminary"].strip().lower() == "true"))
+                               row["preliminary"].strip().lower() == "true",
+                               **{key: row.get(key, "").strip() for key in ("kfsr", "kvr", "target_code", "document_id", "preliminary_status")}))
     if not result:
         raise ValueError("Кассовая выгрузка пуста")
     return result
@@ -49,11 +52,17 @@ def parse_corrections_csv(content: bytes) -> list[ManualCorrection]:
     missing = set(CORRECTION_COLUMNS) - set(frame.columns)
     if missing:
         raise ValueError(f"Нет полей корректировок: {', '.join(sorted(missing))}")
+    for row in frame.to_dict("records"):
+        if row.get("is_manual", "true").strip().lower() not in {"true", "false"}:
+            raise ValueError("is_manual принимает true или false")
     return [ManualCorrection(row["correction_id"].strip(), row["kind"].strip(), row["municipality"].strip(),
                              row["kbk"].strip(), row["side"].strip(), _date(row["cash_month"]),
                              float(row["amount"].replace(",", ".")), row["reason"].strip(),
                              row["evidence"].strip(), row["approved_by"].strip(),
-                             _date(row["approved_at"]), _date(row["target_month"]) if row["target_month"].strip() else None)
+                             _date(row["approved_at"]), _date(row["target_month"]) if row["target_month"].strip() else None,
+                             kvr=row.get("kvr", "").strip(), document_number=row.get("document_number", "").strip(),
+                             effective_date=_date(row["effective_date"]) if row.get("effective_date", "").strip() else None,
+                             is_manual=row.get("is_manual", "true").strip().lower() == "true")
             for row in frame.to_dict("records")]
 
 
@@ -110,6 +119,7 @@ def render_cash_dashboard() -> None:
             return
     unit = st.selectbox("Единицы сумм", ["руб.", "тыс. руб.", "млн руб."],
                         index=2 if demo else 0, key="cash_unit")
+    opening_balance = st.number_input("Остаток на начало первого месяца", min_value=0.0, value=0.0, help="В тех же единицах, что и CSV. Если остаток неизвестен, результат с нулевой базой является условным.")
     as_of = st.date_input("Данные, доступные на дату", value=date.today(), key="cash_asof")
     try:
         eligible = [row for row in lines if row.available_at <= as_of]
@@ -119,9 +129,9 @@ def render_cash_dashboard() -> None:
         municipalities = sorted({row.municipality for row in eligible})
         selected = st.selectbox("Муниципалитет", municipalities, key="cash_municipality")
         sources = sorted({row.source for row in eligible if row.municipality == selected})
-        source = st.selectbox("Источник кассовых строк", sources, key="cash_source")
+        source = st.selectbox("Источник кассовых строк", sources, format_func=lambda value: {"UFK_CASH": "УФК · оперативные движения", "REPORT_0503117": "Форма 0503117 · отчёт об исполнении"}.get(value, value), key="cash_source")
         monthly = monthly_from_ytd([row for row in eligible if row.municipality == selected and row.source == source])
-        result = normalize_cash(monthly, corrections, as_of=as_of, municipality=selected, source=source)
+        result = normalize_cash(monthly, corrections, as_of=as_of, municipality=selected, source=source, opening_balance=opening_balance)
     except ValueError as exc:
         st.error(f"Расчёт остановлен: {exc}")
         return
@@ -132,7 +142,7 @@ def render_cash_dashboard() -> None:
     metric_grid([
         {"label": "Кассовые доходы", "value": f"{latest.raw_revenue:,.1f}", "meta": f"за месяц · {unit}", "tone": "info"},
         {"label": "Регулярные доходы", "value": f"{latest.normalized_revenue:,.1f}", "meta": "после утверждённых поправок", "tone": "positive"},
-        {"label": "Кассовый остаток", "value": f"{latest.cash_balance:,.1f}", "meta": "начальный остаток 0 · условно", "tone": "warning" if latest.cash_balance < 0 else "info"},
+        {"label": "Кассовый остаток", "value": f"{latest.cash_balance:,.1f}", "meta": f"начальный остаток {opening_balance:,.1f} · {unit}", "tone": "warning" if latest.cash_balance < 0 else "info"},
         {"label": "Потребность в покрытии", "value": f"{latest.reserve_need:,.1f}", "meta": "при отрицательном остатке", "tone": "danger" if latest.reserve_need else "muted"},
     ])
     frame = pd.DataFrame([row.__dict__ for row in result])
@@ -150,9 +160,12 @@ def render_cash_dashboard() -> None:
     display = frame.rename(columns={"month": "Месяц", "raw_revenue": "Доходы касса",
                                     "normalized_revenue": "Доходы регулярные", "raw_expenditure": "Расходы касса",
                                     "cash_balance": "Остаток", "reserve_need": "Потребность", "status": "Статус"})
+    display["Статус"] = display["Статус"].map({"OBSERVED": "Исходные данные", "ADJUSTED": "С корректировками"})
+    with st.expander("Как читать показатели и формулы"):
+        st.markdown("**Кассовые доходы и расходы** — движения по выбранному источнику, без аналитических поправок.\n\n**Регулярные доходы** = кассовые доходы + перенос возвратов − разовые поступления − авансы текущего месяца + авансы, отнесённые к этому месяцу.\n\n**Кассовый остаток** = начальный остаток + накопленные доходы + финансирование − расходы − повторно учтённые переходящие остатки.\n\n**Потребность в покрытии** = максимум из нуля и отрицательного кассового остатка. Это оценка по загруженным данным.\n\n**Месячная сумма из 0503117** = накопленная сумма текущего месяца − накопленная сумма предыдущего месяца.\n\n**КФСР** — раздел и подраздел расходов; **КВР** — вид расходов; **целевая статья** — связь с программой. Коды хранятся текстом, с ведущими нулями.\n\nПоправки применяются после даты утверждения и вступления в силу. Признак «ручная» показывает происхождение поправки, но не заменяет основание и утверждение. Сезонность и дефлятор на этом экране пока не подключены.")
     st.dataframe(display[["Месяц", "Доходы касса", "Доходы регулярные", "Расходы касса",
                           "Остаток", "Потребность", "Статус"]], hide_index=True, width="stretch")
     if corrections:
         with st.expander(f"Журнал корректировок · {len(corrections)}"):
-            st.dataframe(pd.DataFrame([row.__dict__ for row in corrections]), hide_index=True, width="stretch")
+            st.dataframe(pd.DataFrame([row.__dict__ for row in corrections]).rename(columns=CORRECTION_LABELS).replace({"REVENUE": "Доходы", "EXPENDITURE": "Расходы", "FINANCING": "Финансирование", "REFUND_REALLOCATION": "Перенос возврата", "ONE_OFF": "Разовое поступление", "ADVANCE_REALLOCATION": "Перенос аванса", "CARRYOVER": "Переходящий остаток"}), hide_index=True, width="stretch")
     st.caption("Месячный план и реальный начальный остаток подключаются после согласования источника. «Разрыв нормализации» бюджетных лимитов здесь не пересчитывается.")
