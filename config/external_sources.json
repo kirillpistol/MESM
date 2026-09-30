@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "external_sources": [
+    {
+      "id": "fns_5ndfl",
+      "title": "5-НДФЛ · налоговая отчётность",
+      "url": "https://storage.yandexcloud.net/tochno-st-catalog/FNS/data_ndfl_155_v20260722/data_5ndfl_155_v20260722.parquet",
+      "format": "parquet",
+      "oktmo_field": "object_oktmo",
+      "frequency": "annual",
+      "status": "connected",
+      "blocker": "Схема проверена; требуется выбор показателя, разреза, проверка ОКТМО и дат публикации. report_date не считается available_at автоматически.",
+      "expected_lag_months": null,
+      "validation_metric": "pearson_on_comparable_published_periods",
+      "owner": "kirill",
+      "added_at": "2026-09-30",
+      "artifact_sha256": "b45f51b61874d7049582b5eca1baaf83be02bc03f02d253b708e1a7581d0a8b3",
+      "validation_report": null,
+      "extracted_file": "data/external/fns_5ndfl_surgut.csv",
+      "actual_rows": 33969595
+    },
+    {
+      "id": "surgut_cash_monthly_2024",
+      "title": "Месячные отчёты Сургута 2024",
+      "url": "https://admsurgut.ru/gorodskaya-vlast/administratsiya/strukturnye-podrazdeleniya/departament-finansov/byudzhet-i-finansy/byudzhet-goroda-surguta-/tekushchee-ispolnenie-byudzheta-goroda/arkhiv-6/2024-god-2/ezhemesyachnye-otchety-ob-ispolnenii-byudzheta-goroda-v-2024-godu/",
+      "format": "discovery",
+      "oktmo_field": null,
+      "frequency": "monthly",
+      "status": "candidate",
+      "blocker": "Проверить файлы, форму, детализацию и даты публикации",
+      "expected_lag_months": null,
+      "validation_metric": "pearson_on_comparable_published_periods",
+      "owner": "kirill",
+      "added_at": "2026-09-30",
+      "artifact_sha256": null,
+      "validation_report": null
+    },
+    {
+      "id": "ksp_annual_reference",
+      "title": "Заключения КСП на исполнение бюджета",
+      "url": "https://kspsurgut.ru/?page_id=1071",
+      "format": "pdf",
+      "oktmo_field": null,
+      "frequency": "annual",
+      "status": "candidate",
+      "blocker": "Извлечь показатели и сверить с приложениями 0503117",
+      "expected_lag_months": null,
+      "validation_metric": "pearson_on_comparable_published_periods",
+      "owner": "kirill",
+      "added_at": "2026-09-30",
+      "artifact_sha256": null,
+      "validation_report": null
+    }
+  ],
+  "history": [
+    {
+      "source_id": "fns_5ndfl",
+      "previous": "candidate",
+      "status": "connected",
+      "actor": "kirill",
+      "evidence": "Получен реальный файл, проверены обязательные поля, записана SHA256 и выгрузка Сургута",
+      "at": "2026-09-30T17:11:53.912756+00:00"
+    }
+  ]
+}

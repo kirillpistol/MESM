@@ -952,6 +952,16 @@ if page == "Отчёт":
 
 if page == "Источники":
     st.subheader("Источники и pipeline")
+    from mesm.sources.registry import load_registry
+    external_registry = load_registry(ROOT / "config" / "external_sources.json")
+    with st.expander("Внешние источники · реестр и история", expanded=True):
+        external_frame = pd.DataFrame(external_registry["external_sources"])[["title", "frequency", "status", "blocker", "owner"]]
+        external_frame = external_frame.rename(columns={"title": "Источник", "frequency": "Частота", "status": "Статус", "blocker": "Что осталось проверить", "owner": "Ответственный"})
+        external_frame = external_frame.replace({"candidate": "Кандидат", "connected": "Подключён", "validated": "Проверен", "rejected": "Отклонён", "annual": "Годовая", "monthly": "Месячная"})
+        st.dataframe(external_frame, hide_index=True, width="stretch")
+        st.caption("Подключён означает получение данных. Допуск к детекторам требует отдельной проверки сопоставимости и дат публикации.")
+        if external_registry["history"]:
+            st.dataframe(pd.DataFrame(external_registry["history"]), hide_index=True, width="stretch")
     section_header(
         "Data lineage monitor",
         "PROVENANCE",
