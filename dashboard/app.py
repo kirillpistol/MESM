@@ -304,17 +304,20 @@ budget_project = load_current_dataset("budget_project", ROOT)
 sidebar_brand()
 page = st.sidebar.radio(
     "Навигация",
-    ["Обзор", "Модели", "Бюджет", "Кассовый контур", "Монитор шоков", "БО", "Отчёт", "Источники", "Данные", "Ввод данных", "Методика"],
+    ["Обзор", "Модели", "Бюджет", "Кассовый контур", "Монитор шоков", "БО", "Источники", "Данные", "Ввод данных", "Методика"],
     index=0,
     label_visibility="collapsed",
 )
 st.sidebar.markdown('<div class="mesm-sidebar-label">КОНТЕКСТ</div>', unsafe_allow_html=True)
 
-app_header(
-    "MESM",
-    "Муниципальный монитор экономических изменений",
-    "Прогноз · структурные изменения · официальные данные",
-)
+header_main, header_action = st.columns([4, 1.25], vertical_alignment="center")
+with header_main:
+    app_header(
+        "MESM",
+        "Муниципальный монитор экономических изменений",
+        "Прогноз · структурные изменения · официальные данные",
+    )
+report_action = header_action.empty()
 
 municipalities = sorted({str(v).strip() for v in panel["municipality_name"].dropna().tolist() if str(v).strip()})
 if municipalities:
@@ -899,47 +902,6 @@ if page == "БО":
             hide_index=True,
         )
 
-if page == "Отчёт":
-    st.subheader("Отчет MESM")
-    section_header("Decision-ready summary", "EXECUTIVE OUTPUT", "Краткий вывод, пригодный для аналитической записки.")
-    st.write(f"**{decision_memo.headline}**")
-    st.write(decision_memo.what_changed)
-    st.caption(decision_memo.evidence)
-    st.write(decision_memo.interpretation)
-    with st.expander("Что проверить дальше"):
-        for item in decision_memo.next_checks:
-            st.markdown(f"- {item}")
-        st.caption(decision_memo.limitation)
-
-    st.markdown("#### Reference-вывод")
-    st.write(conclusion)
-
-    report_html = make_report_html(
-        municipality=municipality,
-        latest_year=latest_year,
-        latest=latest,
-        flags=flags,
-        conclusion=conclusion,
-        selected_bo=selected_bo,
-        decision_memo=decision_memo,
-        budget_result=budget_result,
-    )
-    safe_name = ((str(municipality).strip() if municipality is not None else "") or "municipality").replace(" ", "_").replace("/", "_")
-    st.download_button(
-        "Скачать отчет HTML",
-        data=report_html.encode("utf-8"),
-        file_name=f"MESM_{safe_name}_{latest_year or 'current'}.html",
-        mime="text/html",
-        width="stretch",
-    )
-    st.download_button(
-        "Скачать данные муниципалитета CSV",
-        data=current.to_csv(index=False).encode("utf-8-sig"),
-        file_name=f"MESM_{safe_name}_reference.csv",
-        mime="text/csv",
-        width="stretch",
-    )
-
 if page == "Источники":
     st.subheader("Источники и pipeline")
     from mesm.sources.registry import load_registry
@@ -1094,3 +1056,18 @@ Municipal Finance и Economic Structure. Если данных нет, обла�
 
 from page_sources import render_page_sources
 render_page_sources(ROOT, page)
+
+
+report_html = make_report_html(
+    municipality=municipality, latest_year=latest_year, latest=latest,
+    flags=flags, conclusion=conclusion, selected_bo=selected_bo,
+    decision_memo=decision_memo, budget_result=None,
+)
+safe_name = ((str(municipality).strip() if municipality is not None else "") or "municipality").replace(" ", "_").replace("/", "_")
+with report_action.container():
+    st.download_button(
+        "↓ Общий отчёт", data=report_html.encode("utf-8"),
+        file_name=f"MESM_{safe_name}_{latest_year or 'current'}.html",
+        mime="text/html", key="global_report_download", width="stretch",
+        help="Единый отчёт по выбранному муниципалитету: официальный срез, сигналы, выводы и бюджетная обеспеченность. Содержание не зависит от открытого экрана. HTML можно открыть в браузере и распечатать в PDF.",
+    )
