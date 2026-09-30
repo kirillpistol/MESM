@@ -4,13 +4,13 @@ import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-RED = "#D71920"
-BLUE = "#315EAA"
-GREEN = "#237A57"
-AMBER = "#B7791F"
-INK = "#17191E"
+RED = "#D65B57"
+BLUE = "#4676C9"
+GREEN = "#555D6A"
+AMBER = "#959DAA"
+INK = "#202329"
 MUTED = "#737A84"
-GRID = "#E6E8EC"
+GRID = "#E5E7EC"
 LIGHT = "#F4F5F7"
 
 
@@ -94,7 +94,7 @@ def expenditure_structure_chart(frame: pd.DataFrame, top_n: int = 12) -> go.Figu
         x=data["amount"] / 1_000_000,
         y=data[label_col],
         orientation="h",
-        marker=dict(color=RED),
+        marker=dict(color=GREEN),
         text=[f"{v / 1_000_000:.2f}" for v in data["amount"]],
         textposition="outside",
         hovertemplate="%{y}: %{x:.3f} млрд ₽<extra></extra>",

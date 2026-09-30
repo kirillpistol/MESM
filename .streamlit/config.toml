@@ -1,15 +1,7 @@
 [theme]
 base = "light"
-primaryColor = "#D71920"
+primaryColor = "#444B56"
 backgroundColor = "#F4F5F7"
 secondaryBackgroundColor = "#FFFFFF"
-textColor = "#17191E"
+textColor = "#202329"
 font = "sans serif"
-
-[browser]
-gatherUsageStats = false
-
-[server]
-address = "127.0.0.1"
-headless = true
-runOnSave = false

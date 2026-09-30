@@ -137,9 +137,9 @@ def render_cash_dashboard() -> None:
     ])
     frame = pd.DataFrame([row.__dict__ for row in result])
     fig = go.Figure()
-    for name, column, color, dash in [("Доходы касса", "raw_revenue", "#6F6F6F", "solid"),
-                                      ("Доходы регулярные", "normalized_revenue", "#D71920", "solid"),
-                                      ("Расходы касса", "raw_expenditure", "#315EAA", "dash")]:
+    for name, column, color, dash in [("Доходы касса", "raw_revenue", "#9097A3", "solid"),
+                                      ("Доходы регулярные", "normalized_revenue", "#4676C9", "solid"),
+                                      ("Расходы касса", "raw_expenditure", "#D65B57", "dash")]:
         fig.add_trace(go.Scatter(x=frame["month"], y=frame[column], name=name,
                                  mode="lines+markers", line=dict(color=color, width=3, dash=dash)))
     fig.update_layout(title="Движение по месяцам", height=370, template="plotly_white",
