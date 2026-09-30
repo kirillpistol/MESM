@@ -1090,3 +1090,7 @@ Municipal Finance и Economic Structure. Если данных нет, обла�
 Полная версия методологии сохранена в `docs/16_methodology_v1.md`.
         """
     )
+
+
+from page_sources import render_page_sources
+render_page_sources(ROOT, page)
