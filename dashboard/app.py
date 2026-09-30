@@ -717,7 +717,7 @@ if page == "Монитор шоков":
     hero_panel(
         "Контур структурных изменений",
         "От ошибки прогноза к предупреждению и подтверждённому изменению режима",
-        "Краткие аномалии и устойчивые regime shifts оцениваются отдельно. Online detection не смешивается с offline confirmation.",
+        "Краткие аномалии и устойчивые изменения режима оцениваются отдельно. Первичный сигнал поступает по мере наблюдения; подтверждение выполняется после накопления данных. Показатели ниже относятся к синтетическому исследованию.",
         [
             {"label":"Online-лидер","value":"Page-Hinkley","meta":"32,3% · среднее выявление режима"},
             {"label":"Подтверждение","value":"PELT","meta":"38,5% · среднее выявление режима"},
@@ -738,55 +738,36 @@ if page == "Монитор шоков":
         section_header(
             "Сравнение детекторов",
             "КОНТРОЛЬНЫЕ СЦЕНАРИИ",
-            "Одинаковый false-alarm budget; transient shock и regime shift оцениваются раздельно.",
+            "Единый лимит ложных тревог. Краткий шок и устойчивый сдвиг сравниваются отдельно; результаты получены на контрольных сценариях.",
         )
         st.plotly_chart(
             shock_benchmark_chart(shock_summary),
             width="stretch",
             config={"displayModeBar": False, "responsive": True},
         )
-        cols=st.columns([1.25,1])
-        with cols[0]:
-            st.plotly_chart(
-                shock_calibration_chart(shock_calibration),
-                width="stretch",
-                config={"displayModeBar": False, "responsive": True},
-            )
-        with cols[1]:
-            regime=shock_summary[shock_summary["event_type"].astype(str).eq("REGIME_SHIFT")].copy()
-            regime["detection_rate"]=pd.to_numeric(regime["detection_rate"],errors="coerce")
-            online=regime[regime["detector"].astype(str).isin(["CUSUM","PAGE_HINKLEY"])].sort_values("detection_rate",ascending=False)
-            pelt=regime[regime["detector"].astype(str).eq("PELT")]
-            metric_grid([
-                {
-                    "label":"Лучший online",
-                    "value":"—" if online.empty else str(online.iloc[0]["detector"]).replace("_"," ").title(),
-                    "meta":"устойчивый сдвиг",
-                    "tone":"positive",
-                },
-                {
-                    "label":"Выявление online",
-                    "value":"—" if online.empty else f"{float(online.iloc[0]['detection_rate']):.1%}",
-                    "meta":"среднее по сценарию",
-                    "tone":"info",
-                },
-                {
-                    "label":"Выявление PELT",
-                    "value":"—" if pelt.empty else f"{float(pelt.iloc[0]['detection_rate']):.1%}",
-                    "meta":"подтверждение после факта",
-                    "tone":"neutral",
-                },
-                {
-                    "label":"Точность PELT",
-                    "value":"—" if pelt.empty else f"{float(pelt.iloc[0]['median_localization_error']):.1f} мес.",
-                    "meta":"медианная ошибка",
-                    "tone":"positive",
-                },
-            ], columns=2)
+        comparison = shock_summary.merge(
+            shock_calibration[["detector", "null_path_fpr"]], on="detector", how="left")
+        comparison["Роль"] = comparison["detector"].map({"CUSUM": "Первичный сигнал", "PAGE_HINKLEY": "Первичный сигнал", "PELT": "Подтверждение после факта"})
+        comparison = comparison.rename(columns={"detector": "Детектор", "event_type": "Сценарий", "detection_rate": "Выявлено", "null_path_fpr": "Ложные тревоги без шока", "median_delay_periods": "Задержка, периодов", "median_localization_error": "Ошибка даты, периодов"})
+        comparison["Сценарий"] = comparison["Сценарий"].replace({"REGIME_SHIFT": "Устойчивый сдвиг", "TRANSIENT_SHOCK": "Краткий шок"})
+        st.dataframe(comparison[["Детектор", "Роль", "Сценарий", "Выявлено", "Ложные тревоги без шока", "Задержка, периодов", "Ошибка даты, периодов"]].style.format({"Выявлено": "{:.1%}", "Ложные тревоги без шока": "{:.1%}", "Задержка, периодов": "{:.1f}", "Ошибка даты, периодов": "{:.1f}"}, na_rep="—"), hide_index=True, width="stretch")
+        st.caption("Выявлено — доля сценариев с обнаруженным событием. Задержка относится к первичному сигналу; ошибка даты — к локализации события. Пустое значение означает, что метрика не применяется или не рассчитана.")
+        with st.expander("Калибровка лимита ложных тревог"):
+            st.plotly_chart(shock_calibration_chart(shock_calibration), width="stretch", config={"displayModeBar": False})
 
-    st.markdown("#### Real External Data Layer")
+    section_header("Готовность реальных данных", "ИСТОЧНИКИ", "Получение файла, проверка сопоставимости и допуск к мониторингу — отдельные этапы.")
     if external.empty:
-        st.warning("External Data Layer: NO DATA")
+        from mesm.sources.registry import load_registry
+        registry = load_registry(ROOT / "config" / "external_sources.json")
+        fns = next((row for row in registry["external_sources"] if row["id"] == "fns_5ndfl"), {})
+        connected = fns.get("status") in {"connected", "validated"}
+        status_banner("МОНИТОРИНГ ОЖИДАЕТ ДАННЫХ", "Высокочастотный ряд ещё не допущен к детекторам.",
+                      "5-НДФЛ получен как годовой источник. Он не заменяет месячный прогнозный ряд; требуется проверка показателя и дат публикации." if connected else "Подключите внешний ряд, проверьте его схему, единицы и даты публикации на экране «Источники».", tone="info")
+        metric_grid([
+            {"label": "5-НДФЛ", "value": "Получен" if connected else "Ожидается", "meta": "годовой источник · не оперативный сигнал", "tone": "info"},
+            {"label": "Сверка с бюджетом", "value": "Не завершена", "meta": "показатель, ОКТМО, периоды и единицы", "tone": "muted"},
+            {"label": "Допуск к детекторам", "value": "Ожидается", "meta": "нужны исторические даты доступности", "tone": "muted"},
+        ])
     else:
         ext_cols = st.columns(4)
         ext_cols[0].metric("Строк", external_cov.rows)
@@ -836,11 +817,19 @@ if page == "Монитор шоков":
             with st.expander("Forecast vs Actual — таблица"):
                 st.dataframe(forecast_table.round(4), width="stretch", hide_index=True)
 
-    st.markdown("#### Synthetic Demo")
-    control_a, control_b = st.columns(2)
-    shock_sigma = control_a.slider("Размер шока, σ", 0.5, 4.0, 2.5, 0.5)
-    duration = control_b.slider("Длительность шока, периодов", 1, 6, 3, 1)
-    direction = st.radio("Направление", ["Падение", "Рост"], horizontal=True)
+    section_header("Лаборатория сценариев", "СИНТЕТИЧЕСКИЙ ТЕСТ", "Выберите событие и посмотрите, как на него реагирует монитор. Это учебная симуляция, а не данные Сургута.")
+    scenario = st.selectbox("Сценарий события", ["Краткое падение", "Устойчивое падение", "Устойчивый рост", "Без заданного шока", "Свой сценарий"], key="shock_scenario")
+    presets = {"Краткое падение": (2.5, 3, "Падение"), "Устойчивое падение": (3.0, 12, "Падение"), "Устойчивый рост": (3.0, 12, "Рост"), "Без заданного шока": (0.0, 0, "Падение")}
+    if scenario == "Свой сценарий":
+        with st.expander("Настройки события", expanded=True):
+            control_a, control_b = st.columns(2)
+            shock_sigma = control_a.number_input("Сила отклонения, σ", min_value=0.0, max_value=4.0, value=2.5, step=.5, help="σ — стандартное отклонение обычных колебаний. 3σ означает сильное отклонение, а не падение на 3%.")
+            duration = int(control_b.number_input("Продолжительность, периодов", min_value=1, max_value=18, value=3, step=1))
+            direction = st.radio("Направление события", ["Падение", "Рост"], horizontal=True)
+    else:
+        shock_sigma, duration, direction = presets[scenario]
+    st.caption(f"Условия: {shock_sigma:g}σ · {duration} периодов · начало в периоде 31. Все сценарии используют один и тот же воспроизводимый базовый ряд.")
+    st.info("CUSUM даёт первичный сигнал. PELT анализирует весь тестовый ряд после факта; состояние в этой лаборатории включает его подтверждение и не является результатом проверки раннего обнаружения.")
 
     demo = stress_demo(shock_sigma, duration, direction)
     first_cusum = demo.loc[demo["cusum_alarm"], "period"]
@@ -849,8 +838,8 @@ if page == "Монитор шоков":
     metric_grid([
         {"label": "Начало шока", "value": "период 31", "meta": "тестовый сценарий", "tone": "neutral"},
         {"label": "Первый сигнал CUSUM", "value": "—" if first_cusum.empty else f"период {int(first_cusum.iloc[0])}", "meta": "детектор", "tone": "info"},
-        {"label": "BREAK_CONFIRMED", "value": "—" if break_rows.empty else f"период {int(break_rows.iloc[0])}", "meta": "смена состояния", "tone": "danger" if not break_rows.empty else "muted"},
-        {"label": "Итоговое состояние", "value": str(demo.iloc[-1]["state"]), "meta": "state machine", "tone": tone_for_status(str(demo.iloc[-1]["state"]))},
+        {"label": "Подтверждённый сдвиг", "value": "—" if break_rows.empty else f"период {int(break_rows.iloc[0])}", "meta": "смена состояния", "tone": "danger" if not break_rows.empty else "muted"},
+        {"label": "Итоговое состояние", "value": {"NORMAL": "Норма", "OBSERVE": "Наблюдение", "WARNING": "Предупреждение", "BREAK_CONFIRMED": "Сдвиг подтверждён"}.get(str(demo.iloc[-1]["state"]), str(demo.iloc[-1]["state"])), "meta": "состояние на конец симуляции", "tone": tone_for_status(str(demo.iloc[-1]["state"]))},
     ])
 
     st.plotly_chart(
@@ -859,7 +848,8 @@ if page == "Монитор шоков":
         config={"displayModeBar": False, "responsive": True},
     )
 
-    st.markdown("#### Расчеты детектора")
+    st.markdown("#### Расчёты детектора")
+    st.caption("Ошибка = факт − прогноз; Z-оценка показывает масштаб ошибки относительно обычных колебаний. Подтверждения — число совпавших признаков CUSUM и PELT. Возврат к норме в конце не отменяет ранее обнаруженное событие.")
     st.dataframe(
         demo[[
             "period",
@@ -870,7 +860,7 @@ if page == "Монитор шоков":
             "confirmations",
             "state",
             "reason",
-        ]].round({"residual": 3, "z_score": 3}),
+        ]].round({"residual": 3, "z_score": 3}).rename(columns={"period": "Период", "residual": "Ошибка прогноза", "z_score": "Z-оценка", "cusum_alarm": "Сигнал CUSUM", "pelt_near": "Граница PELT рядом", "confirmations": "Подтверждения", "state": "Состояние", "reason": "Причина перехода"}).replace({"NORMAL": "Норма", "OBSERVE": "Наблюдение", "WARNING": "Предупреждение", "BREAK_CONFIRMED": "Сдвиг подтверждён"}),
         width="stretch",
         hide_index=True,
     )
