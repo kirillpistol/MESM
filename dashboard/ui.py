@@ -101,22 +101,12 @@ def section_header(title: str, tag: str = "", caption: str = "") -> None:
 def metric_grid(cards: Sequence[dict], columns: int = 4) -> None:
     if not cards:
         return
-    for start in range(0, len(cards), columns):
-        chunk = cards[start:start + columns]
-        cols = st.columns(len(chunk))
-        for col, card in zip(cols, chunk):
-            tone = _TONE_CLASS.get(str(card.get("tone", "neutral")), "neutral")
-            with col:
-                st.markdown(
-                    f"""
-<div class="mesm-card {tone}">
-  <div class="mesm-card-label">{html.escape(str(card.get("label", "")))}</div>
-  <div class="mesm-card-value">{html.escape(str(card.get("value", "—")))}</div>
-  <div class="mesm-card-meta">{html.escape(str(card.get("meta", "")))}</div>
-</div>
-                    """,
-                    unsafe_allow_html=True,
-                )
+    columns = max(1, min(int(columns), 4))
+    blocks = []
+    for card in cards:
+        tone = _TONE_CLASS.get(str(card.get("tone", "neutral")), "neutral")
+        blocks.append(f'<div class="mesm-card {tone}"><div class="mesm-card-label">{html.escape(str(card.get("label", "")))}</div><div class="mesm-card-value">{html.escape(str(card.get("value", "—")))}</div><div class="mesm-card-meta">{html.escape(str(card.get("meta", "")))}</div></div>')
+    st.markdown(f'<div class="mesm-metric-grid" style="--columns:{columns}">{"".join(blocks)}</div>', unsafe_allow_html=True)
 
 
 def status_banner(status: str, headline: str, copy: str, tone: str = "neutral") -> None:

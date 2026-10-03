@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
+from math import isfinite
 
 
 class ContourState(str, Enum):
@@ -26,6 +27,8 @@ class StateMachineConfig:
     min_confirmations: int = 2
 
     def __post_init__(self) -> None:
+        if not all(isfinite(v) and v >= 0 for v in (self.off_threshold, self.on_threshold)):
+            raise ValueError("Пороги должны быть конечными и неотрицательными")
         if not self.off_threshold < self.on_threshold:
             raise ValueError("off_threshold должен быть ниже on_threshold")
         if min(self.k_on, self.k_off, self.break_persistence, self.min_confirmations) < 1:
@@ -64,7 +67,11 @@ class HysteresisStateMachine:
 
     def update(self, score: float, confirmations: int = 0) -> StateUpdate:
         c = self.config
-        confirmations = max(0, int(confirmations))
+        if not isfinite(score) or score < 0:
+            raise ValueError("Оценка сигнала должна быть конечной и неотрицательной")
+        if not isfinite(confirmations) or confirmations < 0 or int(confirmations) != confirmations:
+            raise ValueError("Подтверждения должны быть неотрицательным целым числом")
+        confirmations = int(confirmations)
 
         if score >= c.on_threshold:
             self.above_streak += 1

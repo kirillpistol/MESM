@@ -18,7 +18,7 @@ PAGE_FILES = {
     'Источники': ['config/external_sources.json', 'config/official_sources.json', 'docs/32_external_validation.md'],
     'Данные': ['docs/04_data_contracts.md', 'config/source_registry.yaml'],
     'Ввод данных': ['docs/04_data_contracts.md', 'docs/22_budget_project_import.md'],
-    'Методика': ['docs/16_methodology_v1.md', 'docs/05_formula_registry.md'],
+    'Методика': ['docs/16_methodology_v1.md', 'docs/05_formula_registry.md', 'docs/33_project_logic_review.md', 'docs/34_author_structure_comments.md'],
 }
 
 

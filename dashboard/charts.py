@@ -18,16 +18,16 @@ def _finish(fig: go.Figure, *, height: int = 360, percent_y: bool = False) -> go
     fig.update_layout(
         template="plotly_white",
         height=height,
-        margin=dict(l=22, r=22, t=34, b=26),
+        margin=dict(l=45, r=45, t=30, b=110),
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
         font=dict(family='Inter, "Segoe UI", Arial, sans-serif', color=INK, size=12),
-        legend=dict(orientation="h", yanchor="bottom", y=1.015, xanchor="left", x=0, font=dict(size=11)),
+        legend=dict(orientation="h", yanchor="top", y=-0.22, xanchor="left", x=0, font=dict(size=11)),
         hoverlabel=dict(bgcolor="white", bordercolor=GRID, font_color=INK),
         bargap=0.34,
     )
-    fig.update_xaxes(showgrid=False, linecolor=GRID, zeroline=False, tickfont=dict(color=MUTED))
-    fig.update_yaxes(gridcolor=GRID, zerolinecolor=GRID, tickfont=dict(color=MUTED))
+    fig.update_xaxes(showgrid=False, linecolor=GRID, zeroline=False, tickfont=dict(color=MUTED), automargin=True)
+    fig.update_yaxes(gridcolor=GRID, zerolinecolor=GRID, tickfont=dict(color=MUTED), automargin=True)
     if percent_y:
         fig.update_yaxes(tickformat=".0%")
     return fig
@@ -128,7 +128,7 @@ def shock_monitor_chart(frame: pd.DataFrame) -> go.Figure:
     fig = make_subplots(specs=[[{"secondary_y": True}]])
     fig.add_trace(
         go.Scatter(
-            x=frame["period"], y=frame["residual"], name="Residual",
+            x=frame["period"], y=frame["residual"], name="Ошибка прогноза",
             mode="lines", line=dict(color=INK, width=2.2),
             hovertemplate="Residual: %{y:.3f}<extra></extra>",
         ),
@@ -136,7 +136,7 @@ def shock_monitor_chart(frame: pd.DataFrame) -> go.Figure:
     )
     fig.add_trace(
         go.Scatter(
-            x=frame["period"], y=frame["z_score"], name="Z-score",
+            x=frame["period"], y=frame["z_score"], name="Z-оценка",
             mode="lines", line=dict(color=RED, width=2.0),
             hovertemplate="Z-score: %{y:.2f}σ<extra></extra>",
         ),
@@ -176,7 +176,7 @@ def shock_monitor_chart(frame: pd.DataFrame) -> go.Figure:
             ),
             secondary_y=True,
         )
-    fig.update_yaxes(title_text="Residual", secondary_y=False)
+    fig.update_yaxes(title_text="Ошибка прогноза", secondary_y=False)
     fig.update_yaxes(title_text="Z-score, σ", secondary_y=True)
     return _finish(fig, height=390)
 

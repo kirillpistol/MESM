@@ -153,8 +153,8 @@ def render_cash_dashboard() -> None:
         fig.add_trace(go.Scatter(x=frame["month"], y=frame[column], name=name,
                                  mode="lines+markers", line=dict(color=color, width=3, dash=dash)))
     fig.update_layout(title="Движение по месяцам", height=370, template="plotly_white",
-                      margin=dict(l=20, r=20, t=50, b=20), yaxis_title=unit,
-                      legend=dict(orientation="h", y=1.14))
+                      margin=dict(l=45, r=25, t=65, b=110), yaxis_title=unit,
+                      legend=dict(orientation="h", yanchor="top", y=-.22))
     st.plotly_chart(fig, width="stretch")
     section_header("Проверка расчёта", "АУДИТ", "Кассовые суммы сохраняются отдельно от аналитического ряда.")
     display = frame.rename(columns={"month": "Месяц", "raw_revenue": "Доходы касса",

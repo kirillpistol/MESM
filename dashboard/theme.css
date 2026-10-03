@@ -88,3 +88,19 @@ a { color: var(--accent); }
 .mesm-source a { color: var(--accent); text-decoration: none; font-weight: 600; }
 @media (max-width: 900px) { .block-container { padding-left: 1rem; padding-right: 1rem; } .mesm-hero-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .mesm-source { grid-template-columns: 1fr; } }
 @media (max-width: 520px) { .mesm-hero-grid { grid-template-columns: 1fr; } .mesm-hero { padding: 1.1rem; } .mesm-section { align-items: start; flex-direction: column; } }
+
+/* Карточки рассчитывают ширину по доступному месту, включая боковую панель. */
+.mesm-metric-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr)); gap:1rem; margin:.5rem 0 1rem; }
+.mesm-hero-grid { grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr)); }
+.mesm-source { grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr)); }
+.mesm-card, .mesm-hero-stat, .mesm-stage, .mesm-budget-node, .mesm-source > div, .mesm-section > div { min-width:0; }
+.mesm-card *, .mesm-hero *, .mesm-stage *, .mesm-source *, .mesm-section *, .mesm-banner *, .mesm-budget-node * { overflow-wrap:anywhere; white-space:normal; }
+.mesm-card-value { font-size:clamp(1.15rem,1.8vw,1.55rem); }
+.mesm-card-label, .mesm-hero-stat-label { line-height:1.5; }
+.mesm-section { align-items:flex-start; flex-wrap:wrap; }
+.mesm-section-tag { flex-shrink:0; }
+.mesm-systembar .context { min-width:0; overflow-wrap:anywhere; }
+[data-testid="stMetricValue"] { white-space:normal; overflow-wrap:anywhere; font-size:clamp(1.2rem,2vw,1.8rem); }
+[data-testid="stDownloadButton"] button { height:auto; min-height:2.75rem; white-space:normal; }
+[data-testid="stDownloadButton"] button p { overflow-wrap:anywhere; white-space:normal; }
+@media (max-width:700px) { .mesm-metric-grid,.mesm-hero-grid,.mesm-source { grid-template-columns:1fr; } .block-container { padding-top:2.5rem; } }
