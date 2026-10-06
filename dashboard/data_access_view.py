@@ -22,3 +22,5 @@ def render_data_access(root):
     st.code("GET /v1/municipalities\nGET /v1/data?dataset=fiscal_panel&municipality=Сургут&limit=100\nGET /v1/report?municipality=Сургут\nGET /v1/sources\nGET /v1/trace",language="text")
     doc=root/"docs/35_data_access_and_replication.md"
     st.download_button("Инструкция подключения и переноса",doc.read_bytes(),doc.name,"text/markdown")
+
+    st.markdown("**Подключить к GENESIS:** общая сборка содержит три репозитория ИИ. Запустите `START_MESM_GENESIS.bat`; результаты и отчёт появятся в `data/genesis/`. Для существующего защищённого ядра используйте mTLS-адаптер уровня 3 по инструкции `docs/37_genesis_connection.md`.")

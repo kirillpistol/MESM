@@ -8,7 +8,7 @@ import streamlit as st
 from ui import section_header, source_card
 
 PAGE_FILES = {
-    'Данные и ИИ': ['config/data_products.json', 'docs/35_data_access_and_replication.md', 'docs/36_data_inventory.md'],
+    'Данные и ИИ': ['config/data_products.json', 'docs/35_data_access_and_replication.md', 'docs/36_data_inventory.md', 'docs/37_genesis_connection.md'],
     'Обзор': ['docs/16_methodology_v1.md', 'docs/29_source_evidence_register.md'],
     'Модели': ['docs/24_competition_core.md', 'config/backtest.yaml'],
     'Бюджет': ['docs/20_budget_normalization.md', 'config/budget_normalization.yaml'],

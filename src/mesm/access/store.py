@@ -8,6 +8,7 @@ import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 import pandas as pd
+from mesm import __version__
 from mesm.data.intake import DATASET_SPECS, load_current_dataset
 
 EXTRA_PATHS = {
@@ -88,7 +89,7 @@ def build_store(root: Path, target: Path) -> dict:
                     conn.execute("INSERT INTO records VALUES (?,?,?,?,?)", (item["id"],name,code,period,payload))
                     if name:
                         conn.execute("INSERT OR IGNORE INTO municipalities VALUES (?,?)", (name,codes.get(name,code)))
-            meta = {"schema_version":1,"snapshot_id":digest.hexdigest(),"built_at":datetime.now(timezone.utc).isoformat(),"read_only":True,"row_counts":counts,"evidence":evidence,"software_version":"1.12.0"}
+            meta = {"schema_version":1,"snapshot_id":digest.hexdigest(),"built_at":datetime.now(timezone.utc).isoformat(),"read_only":True,"row_counts":counts,"evidence":evidence,"software_version":__version__}
             conn.executemany("INSERT INTO metadata VALUES (?,?)", [(k,json.dumps(v,ensure_ascii=False)) for k,v in meta.items()])
         os.replace(temp,target)
         return meta

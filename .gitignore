@@ -31,3 +31,5 @@ data/processed/public_aggregates.status.json
 data/processed/public_aggregates.contracts.json
 
 data/api/
+
+data/genesis/
