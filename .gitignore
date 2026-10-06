@@ -33,3 +33,5 @@ data/processed/public_aggregates.contracts.json
 data/api/
 
 data/genesis/
+
+*.egg-info/

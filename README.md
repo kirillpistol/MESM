@@ -504,5 +504,6 @@ Dashboard переработан в формат аналитического co
 ## MESM 1.12.0: данные для ИИ
 Раздел «Данные и ИИ» показывает каталог выдачи. START_MESM_API.bat запускает локальную базу и HTTP API только для чтения. Инструкция и перенос: [docs/35_data_access_and_replication.md](docs/35_data_access_and_replication.md). Использованные и требуемые данные: [docs/36_data_inventory.md](docs/36_data_inventory.md).
 
-## Подключение GENESIS
-START_MESM_GENESIS.bat запускает локальную связку; [инструкция](docs/37_genesis_connection.md). Используются соседние репозитории ядра, уровня 2 и уровня 3.
+
+## MESM 1.13 — самостоятельный L3
+Панель и общий отчёт сохраняются. START_MESM_L3.bat запускает только API MESM; GENESIS подключается отдельно. [Серверы, изоляция и завершаемый цикл](docs/38_l3_manager_architecture.md).
