@@ -66,7 +66,9 @@ def build_store(root: Path, target: Path) -> dict:
         for row in pd.read_csv(registry, dtype=str).fillna("").to_dict("records"):
             codes[row["municipality_name"]] = row["oktmo"]
     counts = {}
-    evidence = {}
+    from mesm.access.methodology import build_methodology
+    evidence = {"methodology":build_methodology(root)}
+    digest.update(json.dumps(evidence["methodology"],sort_keys=True,ensure_ascii=False).encode())
     for key,rel in {"sources":"config/external_sources.json", "trace":"data/manifest/report_trace_2025.json"}.items():
         path=root/rel
         evidence[key]=json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}

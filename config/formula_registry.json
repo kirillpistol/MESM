@@ -1,0 +1,117 @@
+{
+  "contract": "mesm.formula-registry/1",
+  "registry_version": "1.0.0",
+  "owner": "MESM — L3",
+  "scope": "Формулы числовых результатов текущего серверного report-package. Полный справочник функций и интерактивных расчётов — docs/30_function_reference.md.",
+  "formulas": [
+    {
+      "id": "budget.deficit",
+      "version": "1.0.0",
+      "output": "calculated_deficit",
+      "dataset": "budget_calculations",
+      "expression": "expenditure - total_revenue",
+      "inputs": [
+        "expenditure",
+        "total_revenue"
+      ],
+      "unit": "thousand_rub",
+      "implementation": "src/mesm/access/store.py",
+      "meaning": "Превышение плановых расходов над плановыми доходами; отрицательное значение означает профицит.",
+      "checks": [
+        "Одинаковые денежные единицы",
+        "Конечные исходные суммы"
+      ],
+      "limitations": [
+        "Не кассовый остаток",
+        "Не подтверждает исполнение бюджета"
+      ]
+    },
+    {
+      "id": "budget.uncovered_plan_need",
+      "version": "1.0.0",
+      "output": "uncovered_plan_need",
+      "dataset": "budget_calculations",
+      "expression": "max(calculated_deficit - financing_sources, 0)",
+      "inputs": [
+        "calculated_deficit",
+        "financing_sources"
+      ],
+      "unit": "thousand_rub",
+      "implementation": "src/mesm/access/store.py",
+      "meaning": "Непокрытая плановая потребность после предусмотренного финансирования.",
+      "checks": [
+        "Неотрицательный результат",
+        "Финансирование относится к тому же плану и году"
+      ],
+      "limitations": [
+        "Ноль означает арифметическую увязку плана",
+        "Не доказывает получение средств или правовое соответствие"
+      ]
+    },
+    {
+      "id": "fiscal.income_plan_deviation",
+      "version": "1.0.0",
+      "output": "income_plan_deviation",
+      "dataset": "fiscal_panel",
+      "expression": "((tax_actual + nontax_actual) - (tax_initial + nontax_initial)) / (tax_initial + nontax_initial)",
+      "inputs": [
+        "tax_actual",
+        "nontax_actual",
+        "tax_initial",
+        "nontax_initial"
+      ],
+      "unit": "ratio",
+      "implementation": "scripts/build_fiscal_reference_panel.py",
+      "meaning": "Отклонение собственных доходов от первоначального плана, с сохранением знака.",
+      "checks": [
+        "При отсутствии входа или нулевом плане результат null",
+        "Доля умножается на 100 только для отображения процентов"
+      ],
+      "limitations": [
+        "Это не official_i13: official_i13 ограничивает отрицательное значение нулём",
+        "Не смешивать первоначальный и уточнённый план"
+      ]
+    },
+    {
+      "id": "fiscal.program_expense_share",
+      "version": "1.0.0",
+      "output": "program_expense_share",
+      "dataset": "fiscal_panel",
+      "expression": "program_expense / total_expense",
+      "inputs": [
+        "program_expense",
+        "total_expense"
+      ],
+      "unit": "ratio",
+      "implementation": "scripts/build_fiscal_reference_panel.py",
+      "meaning": "Доля программных расходов в общих расходах.",
+      "checks": [
+        "При отсутствии входа или нулевых общих расходах результат null"
+      ],
+      "limitations": [
+        "Состав программных расходов проверяется по источнику"
+      ]
+    },
+    {
+      "id": "fiscal.debt_load",
+      "version": "1.0.0",
+      "output": "debt_load",
+      "dataset": "fiscal_panel",
+      "expression": "municipal_debt / own_revenue_base",
+      "inputs": [
+        "municipal_debt",
+        "own_revenue_base"
+      ],
+      "unit": "ratio",
+      "implementation": "scripts/build_fiscal_reference_panel.py",
+      "meaning": "Долг относительно собственной доходной базы, заданной исходной методикой.",
+      "checks": [
+        "При отсутствии входа или нулевой базе результат null"
+      ],
+      "limitations": [
+        "Не заменять базу всеми доходами",
+        "Не является самостоятельным юридическим выводом"
+      ]
+    }
+  ]
+}

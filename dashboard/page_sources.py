@@ -8,7 +8,7 @@ import streamlit as st
 from ui import section_header, source_card
 
 PAGE_FILES = {
-    'Данные и ИИ': ['config/data_products.json', 'docs/35_data_access_and_replication.md', 'docs/36_data_inventory.md', 'docs/37_genesis_connection.md', 'docs/38_l3_manager_architecture.md', 'docs/adr/0001-mesm-as-independent-l3.md'],
+    'Данные и ИИ': ['config/data_products.json', 'docs/35_data_access_and_replication.md', 'docs/36_data_inventory.md', 'docs/37_genesis_connection.md', 'docs/38_l3_manager_architecture.md', 'docs/adr/0001-mesm-as-independent-l3.md', 'config/formula_registry.json', 'docs/39_methodology_and_updates.md'],
     'Обзор': ['docs/16_methodology_v1.md', 'docs/29_source_evidence_register.md'],
     'Модели': ['docs/24_competition_core.md', 'config/backtest.yaml'],
     'Бюджет': ['docs/20_budget_normalization.md', 'config/budget_normalization.yaml'],
@@ -19,7 +19,7 @@ PAGE_FILES = {
     'Источники': ['config/external_sources.json', 'config/official_sources.json', 'docs/32_external_validation.md'],
     'Данные': ['docs/04_data_contracts.md', 'config/source_registry.yaml'],
     'Ввод данных': ['docs/04_data_contracts.md', 'docs/22_budget_project_import.md'],
-    'Методика': ['docs/16_methodology_v1.md', 'docs/05_formula_registry.md', 'docs/33_project_logic_review.md', 'docs/34_author_structure_comments.md'],
+    'Методика': ['docs/16_methodology_v1.md', 'docs/05_formula_registry.md', 'docs/33_project_logic_review.md', 'docs/34_author_structure_comments.md', 'docs/30_function_reference.md', 'config/formula_registry.json', 'docs/39_methodology_and_updates.md'],
 }
 
 

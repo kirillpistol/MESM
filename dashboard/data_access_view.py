@@ -28,3 +28,8 @@ def render_data_access(root):
     st.info("Менеджер собирает готовые отчётные пакеты нескольких L3. Формулы бюджета выполняет MESM; ядро GENESIS здесь не запускается.")
     doc=root/"docs/38_l3_manager_architecture.md"
     st.download_button("Архитектура L3 и сборка отчётов",doc.read_bytes(),doc.name,"text/markdown")
+
+    st.markdown("**Формулы и версии:** MESM периодически обновляется. Пакет L3 содержит версии формул и methodology_id; полная документация доступна через `/v1/methodology`.")
+    registry=json.loads((root/"config/formula_registry.json").read_text(encoding="utf-8"))
+    st.dataframe([{"ID":f["id"],"Версия":f["version"],"Поле выдачи":f["output"],"Формула":f["expression"],"Единица":f["unit"]} for f in registry["formulas"]],hide_index=True,width="stretch")
+    st.download_button("Реестр формул для проверки и GENESIS",json.dumps(registry,ensure_ascii=False,indent=2),"MESM_formula_registry.json","application/json")

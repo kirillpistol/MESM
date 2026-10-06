@@ -48,6 +48,8 @@ def handler_factory(store: DataStore, token: str, root: Path):
                 return self.respond(400,{"error":"Повторные параметры запрещены"})
             q = {k:v[0] for k,v in query.items()}
             try:
+                if url.path == "/v1/methodology":
+                    return self.respond(200,store.metadata()["evidence"]["methodology"])
                 if url.path == "/v1/node":
                     from mesm.access.package import descriptor
                     return self.respond(200,descriptor(root,store))
