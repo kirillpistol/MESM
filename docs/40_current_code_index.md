@@ -758,6 +758,19 @@ Decision-ready текст без подмены доказательств ре�
 - `transition` — строка 23. Описание: см. реализацию и основной справочник функций.
 
 
+## src/mesm/sources/search_directory.py
+
+Human-curated search tasks; AI responses never approve source data.
+
+- `fingerprint` — строка 8. Bind human confirmation to the exact search requirements.
+
+- `load_directory` — строка 13. Описание: см. реализацию и основной справочник функций.
+
+- `save_task` — строка 20. Save requirements and append a review event; changed criteria reset approval.
+
+- `build_query` — строка 50. Export a prompt only after confirmation of the current requirements.
+
+
 ## src/mesm/validation/__init__.py
 
 
@@ -863,7 +876,7 @@ Decision-ready текст без подмены доказательств ре�
 
 ## dashboard/page_sources.py
 
-- `render_page_sources` — строка 26. Описание: см. реализацию и основной справочник функций.
+- `render_page_sources` — строка 27. Описание: см. реализацию и основной справочник функций.
 
 
 ## dashboard/report_evidence.py
@@ -877,6 +890,13 @@ Decision-ready текст без подмены доказательств ре�
 - `bars` — строка 13. Описание: см. реализацию и основной справочник функций.
 
 - `enrich_report` — строка 22. Описание: см. реализацию и основной справочник функций.
+
+
+## dashboard/search_view.py
+
+Manual search preparation; external AI and parser execution are future work.
+
+- `render_search_directory` — строка 8. Описание: см. реализацию и основной справочник функций.
 
 
 ## dashboard/source_monitor.py

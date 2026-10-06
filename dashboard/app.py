@@ -305,7 +305,7 @@ budget_project = load_current_dataset("budget_project", ROOT)
 sidebar_brand()
 page = st.sidebar.radio(
     "Навигация",
-    ["Обзор", "Модели", "Бюджет", "Кассовый контур", "Монитор шоков", "БО", "Источники", "Данные", "Ввод данных", "Данные и ИИ", "Методика"],
+    ["Обзор", "Модели", "Бюджет", "Кассовый контур", "Монитор шоков", "БО", "Поиск информации", "Источники", "Данные", "Ввод данных", "Данные и ИИ", "Методика"],
     index=0,
     label_visibility="collapsed",
 )
@@ -392,6 +392,10 @@ system_bar(
     data_status="ОФИЦИАЛЬНЫЕ" if not selected_official_plan.empty else "СПРАВОЧНЫЕ",
     pipeline_status="ГОТОВ" if pipeline_state["fiscal_panel_ready"] else "ПРОВЕРКА",
 )
+
+if page == "Поиск информации":
+    from search_view import render_search_directory
+    render_search_directory(ROOT)
 
 if page == "Данные и ИИ":
     from data_access_view import render_data_access

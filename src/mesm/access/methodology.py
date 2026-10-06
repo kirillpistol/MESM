@@ -1,7 +1,7 @@
 """Versioned methodology snapshot: documentation is not a legal approval."""
 import hashlib,json
 from pathlib import Path
-DOCUMENTS=("docs/30_function_reference.md","docs/05_formula_registry.md","docs/31_cash_schema_and_audit.md","docs/39_methodology_and_updates.md","docs/40_current_code_index.md","docs/adr/0001-mesm-as-independent-l3.md")
+DOCUMENTS=("docs/30_function_reference.md","docs/05_formula_registry.md","docs/31_cash_schema_and_audit.md","docs/39_methodology_and_updates.md","docs/40_current_code_index.md","docs/41_manual_search_directory.md","docs/adr/0001-mesm-as-independent-l3.md")
 def build_methodology(root:Path):
     path=root/"config/formula_registry.json"
     registry=json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"contract":"mesm.formula-registry/1","registry_version":None,"formulas":[]}

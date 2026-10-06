@@ -8,6 +8,7 @@ import streamlit as st
 from ui import section_header, source_card
 
 PAGE_FILES = {
+    "Поиск информации": ["config/search_directory.json", "docs/41_manual_search_directory.md"],
     'Данные и ИИ': ['config/data_products.json', 'docs/35_data_access_and_replication.md', 'docs/36_data_inventory.md', 'docs/37_genesis_connection.md', 'docs/38_l3_manager_architecture.md', 'docs/adr/0001-mesm-as-independent-l3.md', 'config/formula_registry.json', 'docs/39_methodology_and_updates.md'],
     'Обзор': ['docs/16_methodology_v1.md', 'docs/29_source_evidence_register.md'],
     'Модели': ['docs/24_competition_core.md', 'config/backtest.yaml'],

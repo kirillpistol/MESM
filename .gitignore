@@ -35,3 +35,5 @@ data/api/
 data/genesis/
 
 *.egg-info/
+
+data/search/
