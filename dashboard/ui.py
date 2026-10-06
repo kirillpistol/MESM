@@ -27,7 +27,7 @@ def sidebar_brand() -> None:
         """
 <div class="mesm-sidebar-brand">
   <div class="mesm-sidebar-logo">MESM</div>
-  <div class="mesm-sidebar-sub">Муниципальный экономический монитор</div>
+  <div class="mesm-sidebar-sub">Муниципальный экономический монитор · L3</div>
 </div>
 <div class="mesm-sidebar-label">РАЗДЕЛЫ</div>
         """,
@@ -36,7 +36,7 @@ def sidebar_brand() -> None:
 
 
 def app_header(title: str, subtitle: str, meta: str = "") -> None:
-    st.markdown('<div class="mesm-eyebrow">Муниципальная аналитическая система</div>', unsafe_allow_html=True)
+    st.markdown('<div class="mesm-eyebrow">Самостоятельный источник L3 · муниципальная аналитика</div>', unsafe_allow_html=True)
     st.title(title)
     st.markdown(f'<div class="mesm-app-subtitle">{html.escape(subtitle)}</div>', unsafe_allow_html=True)
     if meta:

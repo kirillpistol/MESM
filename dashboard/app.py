@@ -282,7 +282,7 @@ ReferenceScore еще не откалиброван на полноценном 
 </html>"""
 
 
-st.set_page_config(page_title="MESM Control Room", page_icon="📊", layout="wide")
+st.set_page_config(page_title="MESM — L3", page_icon="📊", layout="wide")
 inject_control_room_css()
 
 ensure_panel()
@@ -314,7 +314,7 @@ st.sidebar.markdown('<div class="mesm-sidebar-label">КОНТЕКСТ</div>', un
 header_main, header_action = st.columns([4, 1.25], vertical_alignment="center")
 with header_main:
     app_header(
-        "MESM",
+        "MESM — L3",
         "Муниципальный монитор экономических изменений",
         "Прогноз · структурные изменения · официальные данные",
     )
