@@ -156,6 +156,8 @@ def render_cash_dashboard() -> None:
                       margin=dict(l=45, r=25, t=65, b=110), yaxis_title=unit,
                       legend=dict(orientation="h", yanchor="top", y=-.22))
     st.plotly_chart(fig, width="stretch")
+    from calculation_view import render_cash_calculation
+    render_cash_calculation(result, corrections, municipality=selected, as_of=as_of, unit=unit, opening_balance=opening_balance)
     section_header("Проверка расчёта", "АУДИТ", "Кассовые суммы сохраняются отдельно от аналитического ряда.")
     display = frame.rename(columns={"month": "Месяц", "raw_revenue": "Доходы касса",
                                     "normalized_revenue": "Доходы регулярные", "raw_expenditure": "Расходы касса",

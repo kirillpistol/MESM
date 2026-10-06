@@ -1,0 +1,108 @@
+{
+  "municipality": "Сургут",
+  "year": 2025,
+  "source_url": "https://admsurgut.ru/files/materials/files/files9/%D0%A0%D0%B5%D1%88%D0%B5%D0%BD%D0%B8%D0%B5_%D0%BE%D1%82_23.12.2024___713-VII_%D0%94%D0%93.pdf",
+  "source_document": "Решение Думы города от 23.12.2024 № 713-VII ДГ",
+  "source_sha256": "503243b4f1059f137521e4cde0596b2e6a79965cabd53a02716dc6ed2397cf82",
+  "checked_at": "2026-10-06",
+  "evidence": [
+    {
+      "field": "total_revenue",
+      "value": "49278363.59519",
+      "unit": "тыс. руб.",
+      "raw_value": "49 278 363 595,19",
+      "raw_unit": "руб.",
+      "page": 1,
+      "table_index": null,
+      "row_label": "Пункт 1: общий объём доходов",
+      "col_label": "Пункт 1",
+      "extractor": "pdfplumber search",
+      "extractor_version": "0.11.8",
+      "raw_text_bbox": [
+        306.22484,
+        482.74263999999994,
+        411.43576,
+        496.78263999999996
+      ],
+      "method": "точное текстовое совпадение; рубли / 1000",
+      "status": "verified_pdf"
+    },
+    {
+      "field": "expenditure",
+      "value": "51520222.17054",
+      "unit": "тыс. руб.",
+      "raw_value": "51 520 222 170,54",
+      "raw_unit": "руб.",
+      "page": 1,
+      "table_index": null,
+      "row_label": "Пункт 1: общий объём расходов",
+      "col_label": "Пункт 1",
+      "extractor": "pdfplumber search",
+      "extractor_version": "0.11.8",
+      "raw_text_bbox": [
+        311.69,
+        498.82264,
+        416.76556,
+        512.86264
+      ],
+      "method": "точное текстовое совпадение; рубли / 1000",
+      "status": "verified_pdf"
+    },
+    {
+      "field": "financing_sources",
+      "value": "2241858.57535",
+      "unit": "тыс. руб.",
+      "raw_value": "2 241 858 575,35",
+      "raw_unit": "руб.",
+      "page": 14,
+      "table_index": null,
+      "row_label": "Приложение 2: источники финансирования дефицита",
+      "col_label": "2025 год",
+      "extractor": "pdfplumber search",
+      "extractor_version": "0.11.8",
+      "raw_text_bbox": [
+        349.51,
+        221.20808,
+        411.88311999999996,
+        230.08808
+      ],
+      "method": "точное текстовое совпадение; рубли / 1000",
+      "status": "verified_pdf"
+    },
+    {
+      "field": "revenue_base",
+      "value": "20489196.60116",
+      "unit": "тыс. руб.",
+      "raw_value": "20 489 196 601,16",
+      "raw_unit": "руб.",
+      "page": 10,
+      "table_index": null,
+      "row_label": "Приложение 1: налоговые и неналоговые доходы",
+      "col_label": "2025 год",
+      "extractor": "pdfplumber search",
+      "extractor_version": "0.11.8",
+      "raw_text_bbox": [
+        332.23,
+        215.6948,
+        391.2604,
+        223.49479999999994
+      ],
+      "method": "точное текстовое совпадение; рубли / 1000",
+      "status": "verified_pdf"
+    },
+    {
+      "field": "legal_deficit_base",
+      "value": "16835878.76983",
+      "unit": "тыс. руб.",
+      "page": null,
+      "table_index": null,
+      "row_label": null,
+      "col_label": null,
+      "raw_text_bbox": null,
+      "extractor": null,
+      "extractor_version": null,
+      "method": "revenue_base − additional_ndfl; исходное значение additional_ndfl требует отдельного документа",
+      "status": "needs_operand_trace"
+    }
+  ]
+}

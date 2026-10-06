@@ -18,7 +18,10 @@ jobs:
           python-version: "3.11"
 
       - name: Установить зависимости
-        run: pip install -e ".[dev,yaml,research,changepoint,dashboard]"
+        run: pip install -e ".[dev,yaml,research,changepoint,dashboard,public-data]"
+
+      - name: Проверить целостность снимка данных (SHA-256)
+        run: python scripts/snapshot_manifest.py --verify --strict
 
       - name: Пересобрать Fiscal Reference Panel
         run: python scripts/build_fiscal_reference_panel.py
@@ -29,17 +32,55 @@ jobs:
       - name: Проверить структуру проекта
         run: python scripts/validate_project.py
 
+      - name: Проверить, что .bat сохранили CRLF
+        run: |
+          for f in START_MESM.bat CHECK_MESM.bat UPDATE_OFFICIAL_DATA.bat START_MESM_API.bat; do
+            file "$f" | grep -q CRLF || { echo "$f: нет CRLF"; exit 1; }
+          done
+
       - name: Подготовить Windows сборку
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           mkdir -p dist/MESM
-          rsync -a             --exclude '.git'             --exclude '.github'             --exclude '.venv'             --exclude 'dist'             --exclude '__pycache__'             --exclude '.pytest_cache'             --exclude '*.egg-info/'             ./ dist/MESM/
+          rsync -a --exclude '.git' --exclude '.github' --exclude '.venv' --exclude 'dist' --exclude '__pycache__' --exclude '.pytest_cache' --exclude '*.egg-info/' ./ dist/MESM/
+          cd dist
+          zip -rq MESM_Windows.zip MESM
 
       - name: Сохранить Windows сборку
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v4
         with:
           name: MESM_Windows
-          path: dist/MESM
+          path: dist/MESM_Windows.zip
           if-no-files-found: error
           retention-days: 30
+
+  windows:
+    # Те же проверки на настоящей Windows: пути, кодировки, запуск панели.
+    runs-on: windows-latest
+    env:
+      MESM_NOPAUSE: "1"
+      PYTHONUTF8: "1"
+    steps:
+      - name: Получить код
+        uses: actions/checkout@v4
+
+      - name: Установить Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Установить зависимости
+        run: pip install -e ".[dev,yaml,research,changepoint,dashboard,public-data]"
+
+      - name: Проверить целостность снимка данных (SHA-256)
+        run: python scripts/snapshot_manifest.py --verify --strict
+
+      - name: Пересобрать Fiscal Reference Panel
+        run: python scripts/build_fiscal_reference_panel.py
+
+      - name: Запустить тесты
+        run: python -m pytest
+
+      - name: Проверить запуск панели
+        run: python scripts/smoke_dashboard.py

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import html
+import json
 import math
 import subprocess
 import sys
@@ -304,7 +305,7 @@ budget_project = load_current_dataset("budget_project", ROOT)
 sidebar_brand()
 page = st.sidebar.radio(
     "Навигация",
-    ["Обзор", "Модели", "Бюджет", "Кассовый контур", "Монитор шоков", "БО", "Источники", "Данные", "Ввод данных", "Методика"],
+    ["Обзор", "Модели", "Бюджет", "Кассовый контур", "Монитор шоков", "БО", "Источники", "Данные", "Ввод данных", "Данные и ИИ", "Методика"],
     index=0,
     label_visibility="collapsed",
 )
@@ -321,7 +322,9 @@ report_action = header_action.empty()
 
 municipalities = sorted({str(v).strip() for v in panel["municipality_name"].dropna().tolist() if str(v).strip()})
 if municipalities:
-    default_index = municipalities.index("Сургут") if "Сургут" in municipalities else 0
+    profile_path = ROOT / "config/municipality_profile.json"
+    profile_name = json.loads(profile_path.read_text(encoding="utf-8")).get("municipality_name", "Сургут") if profile_path.exists() else "Сургут"
+    default_index = municipalities.index(profile_name) if profile_name in municipalities else 0
     municipality = st.sidebar.selectbox("Муниципалитет", municipalities, index=default_index)
 else:
     municipality = None
@@ -389,6 +392,10 @@ system_bar(
     data_status="ОФИЦИАЛЬНЫЕ" if not selected_official_plan.empty else "СПРАВОЧНЫЕ",
     pipeline_status="ГОТОВ" if pipeline_state["fiscal_panel_ready"] else "ПРОВЕРКА",
 )
+
+if page == "Данные и ИИ":
+    from data_access_view import render_data_access
+    render_data_access(ROOT)
 
 if page == "Ввод данных":
     render_data_intake(ROOT)
@@ -1058,11 +1065,9 @@ from page_sources import render_page_sources
 render_page_sources(ROOT, page)
 
 
-report_html = make_report_html(
-    municipality=municipality, latest_year=latest_year, latest=latest,
-    flags=flags, conclusion=conclusion, selected_bo=selected_bo,
-    decision_memo=decision_memo, budget_result=None,
-)
+from final_report import build_question_report
+report_html = build_question_report(ROOT, municipality, latest)
+
 safe_name = ((str(municipality).strip() if municipality is not None else "") or "municipality").replace(" ", "_").replace("/", "_")
 with report_action.container():
     st.download_button(

@@ -1,0 +1,7 @@
+# Windows launchers must keep CRLF: cmd.exe mis-parses labels/goto in LF-only .bat files.
+*.bat   text eol=crlf
+*.cmd   text eol=crlf
+README_WINDOWS.txt text eol=crlf
+*.py    text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf

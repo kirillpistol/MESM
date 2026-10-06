@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "products": [
+    {
+      "id": "reference_core",
+      "title": "Исходные годовые бюджетные суммы",
+      "evidence_status": "official_public",
+      "frequency": "annual",
+      "unit": "Единицы должны быть сверены с исходным документом",
+      "meaning": "Исходные суммы для финансовых коэффициентов"
+    },
+    {
+      "id": "fiscal_panel",
+      "title": "Годовые финансовые коэффициенты",
+      "evidence_status": "derived_official",
+      "frequency": "annual",
+      "unit": "Доли, количество, ранг",
+      "meaning": "Отклонение доходов, программные расходы, долг, изменения бюджета"
+    },
+    {
+      "id": "budget_official_plan",
+      "title": "План бюджета",
+      "evidence_status": "official_public",
+      "frequency": "annual",
+      "unit": "тыс. руб.",
+      "meaning": "Доходы, расходы, дефицит, финансирование; план не является исполнением"
+    },
+    {
+      "id": "budget_project",
+      "title": "Структура бюджета",
+      "evidence_status": "official_public",
+      "frequency": "annual",
+      "unit": "Сверить единицу amount с документом",
+      "meaning": "Статьи доходов и расходов"
+    },
+    {
+      "id": "budget_provision",
+      "title": "Бюджетная обеспеченность",
+      "evidence_status": "official_public",
+      "frequency": "annual",
+      "unit": "Коэффициенты; денежные поля по источнику",
+      "meaning": "Фактическая и расчётная БО"
+    },
+    {
+      "id": "quality_rankings",
+      "title": "Рейтинг качества управления",
+      "evidence_status": "official_public",
+      "frequency": "annual",
+      "unit": "Ранг и признаки",
+      "meaning": "Официальный рейтинг"
+    },
+    {
+      "id": "external_monthly",
+      "title": "Внешний месячный ряд",
+      "evidence_status": "external_unvalidated",
+      "frequency": "monthly",
+      "unit": "Поле unit",
+      "meaning": "Только данные; наличие файла не разрешает детектор"
+    },
+    {
+      "id": "fns_5ndfl",
+      "title": "5-НДФЛ: выгрузка Сургута",
+      "evidence_status": "connected_not_validated",
+      "frequency": "annual",
+      "unit": "Зависит от строки показателя",
+      "meaning": "Налоговая статистика; не месячный бюджетный НДФЛ"
+    },
+    {
+      "id": "shock_calibration",
+      "title": "Калибровка детекторов",
+      "evidence_status": "synthetic",
+      "frequency": "scenario",
+      "unit": "Доля ложных тревог",
+      "meaning": "Проверка на синтетике, не эффект внедрения"
+    },
+    {
+      "id": "budget_calculations",
+      "title": "Расчёт увязки бюджетного плана",
+      "evidence_status": "derived_official",
+      "frequency": "annual",
+      "unit": "тыс. руб.",
+      "meaning": "Дефицит и непокрытая плановая потребность; не кассовое исполнение"
+    }
+  ]
+}

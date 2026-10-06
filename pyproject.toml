@@ -1,11 +1,12 @@
 [project]
 name = "mesm"
-version = "1.11.0"
+version = "1.12.0"
 description = "Municipal Economic Shock Monitor"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = ["pandas>=2", "numpy>=1.26"]
 
 [project.optional-dependencies]
+documents = ["python-docx>=1.1", "pdfplumber>=0.11"]
 dev = ["pytest>=8"]
 yaml = ["PyYAML>=6"]
 rar = ["rarfile>=4"]
@@ -18,3 +19,4 @@ competition = ["numpy>=1.26", "pandas>=2", "catboost>=1.2.10", "prophet>=1.4.0"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["src"]

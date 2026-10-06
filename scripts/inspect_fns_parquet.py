@@ -29,7 +29,7 @@ if __name__ == '__main__':
     table.to_pandas().to_csv(output, index=False)
     digest = hashlib.sha256(Path(args.file).read_bytes()).hexdigest()
     registry_path = Path('config/external_sources.json')
-    registry = json.loads(registry_path.read_text())
+    registry = json.loads(registry_path.read_text(encoding="utf-8"))
     source = next(s for s in registry['external_sources'] if s['id'] == 'fns_5ndfl')
     source.update(artifact_sha256=digest, oktmo_field='object_oktmo', extracted_file=str(output),
                   actual_rows=parquet.metadata.num_rows,

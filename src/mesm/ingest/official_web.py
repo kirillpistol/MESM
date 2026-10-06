@@ -11,14 +11,23 @@ from datetime import datetime, timezone
 from hashlib import sha256
 from html.parser import HTMLParser
 import csv
+import http.client
 import json
 from pathlib import Path
 import re
-from typing import Iterable
+import time
+from typing import Callable, Iterable
+from urllib.error import HTTPError, URLError
 from urllib.parse import urljoin, urlparse, unquote
 from urllib.request import Request, urlopen
 
 USER_AGENT = "MESM/1.10 (+public-budget-research; https://github.com/kirillpistol/MESM)"
+
+# Защита загрузчика: только https, только разрешённые хосты, ограничение размера,
+# повторные попытки при сбоях сети и ошибках сервера (5xx, 429).
+MAX_DOWNLOAD_BYTES = 50 * 1024 * 1024
+DEFAULT_RETRIES = 3
+DEFAULT_BACKOFF_SECONDS = 2.0
 
 
 @dataclass(frozen=True)
@@ -97,10 +106,52 @@ def discover_official_files(
     return list(by_url.values())
 
 
-def _request_bytes(url: str, timeout: int = 60) -> tuple[bytes, str]:
+def _host(url: str) -> str:
+    return (urlparse(url).hostname or "").lower()
+
+
+def is_allowed_url(url: str, allowed_hosts: Iterable[str]) -> bool:
+    """https и хост из списка разрешённых (поддомены не разрешаются автоматически)."""
+    parsed = urlparse(url)
+    return parsed.scheme == "https" and _host(url) in {h.lower() for h in allowed_hosts}
+
+
+def _request_bytes(
+    url: str,
+    timeout: int = 60,
+    *,
+    allowed_hosts: Iterable[str] | None = None,
+    retries: int = DEFAULT_RETRIES,
+    backoff: float = DEFAULT_BACKOFF_SECONDS,
+    max_bytes: int = MAX_DOWNLOAD_BYTES,
+    sleep: Callable[[float], None] = time.sleep,
+) -> tuple[bytes, str]:
+    hosts = {h.lower() for h in allowed_hosts} if allowed_hosts is not None else {_host(url)}
+    if not is_allowed_url(url, hosts):
+        raise ValueError(f"URL не разрешён (нужен https и известный хост): {url}")
+
     request = Request(url, headers={"User-Agent": USER_AGENT, "Accept": "*/*"})
-    with urlopen(request, timeout=timeout) as response:
-        return response.read(), response.headers.get_content_type()
+    last_error: Exception | None = None
+    for attempt in range(1, max(1, retries) + 1):
+        try:
+            with urlopen(request, timeout=timeout) as response:
+                final_url = response.geturl()
+                if not is_allowed_url(final_url, hosts):
+                    raise ValueError(f"Редирект на неразрешённый адрес: {final_url}")
+                payload = response.read(max_bytes + 1)
+                if len(payload) > max_bytes:
+                    raise ValueError(f"Файл больше {max_bytes} байт: {url}")
+                return payload, response.headers.get_content_type()
+        except HTTPError as exc:
+            if exc.code < 500 and exc.code != 429:
+                raise  # 404/403 и т.п. повтор не поможет
+            last_error = exc
+        except (URLError, TimeoutError, ConnectionError, http.client.HTTPException) as exc:
+            last_error = exc
+        if attempt < retries:
+            sleep(backoff * attempt)
+    assert last_error is not None
+    raise last_error
 
 
 def _safe_filename(index: int, link: OfficialLink) -> str:
@@ -132,7 +183,12 @@ def fetch_source_bundle(
     source_dir = raw_root / source_id
     source_dir.mkdir(parents=True, exist_ok=True)
 
-    page_bytes, _ = _request_bytes(config["page_url"], timeout=timeout)
+    allowed_hosts = {_host(config["page_url"])} | {
+        str(h).lower() for h in config.get("allowed_hosts", [])
+    }
+    page_bytes, _ = _request_bytes(
+        config["page_url"], timeout=timeout, allowed_hosts=allowed_hosts
+    )
     html = page_bytes.decode("utf-8", errors="replace")
     (source_dir / "source_page.html").write_bytes(page_bytes)
 
@@ -141,6 +197,15 @@ def fetch_source_bundle(
         config["page_url"],
         config.get("allowed_extensions", (".xls", ".xlsx", ".docx")),
     )
+    skipped = [link.url for link in links if not is_allowed_url(link.url, allowed_hosts)]
+    if skipped:
+        foreign = sorted({_host(url) or url for url in skipped})
+        print(
+            f"Пропущены ссылки вне разрешённых хостов или не https: {len(skipped)} "
+            f"(хосты: {', '.join(foreign)}). Если это официальный файловый хост, "
+            f'добавьте его в "allowed_hosts" источника в config/official_sources.json.'
+        )
+    links = [link for link in links if is_allowed_url(link.url, allowed_hosts)]
     if not links:
         raise RuntimeError(f"No official files discovered at {config['page_url']}")
 
@@ -154,7 +219,7 @@ def fetch_source_bundle(
     downloaded_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     rows: list[ManifestRow] = []
     for index, link in enumerate(links, start=1):
-        content, _ = _request_bytes(link.url, timeout=timeout)
+        content, _ = _request_bytes(link.url, timeout=timeout, allowed_hosts=allowed_hosts)
         filename = _safe_filename(index, link)
         destination = source_dir / filename
         digest = sha256(content).hexdigest()
